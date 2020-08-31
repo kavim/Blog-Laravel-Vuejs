@@ -6,6 +6,16 @@
 
 require('./bootstrap');
 
+require('popper.js');
+
+ // vali assets
+
+require('./vali/main');
+
+// VEU
+
+
+
 window.Vue = require('vue');
 
 /**

@@ -49732,6 +49732,12 @@ module.exports = function(module) {
  */
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+__webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js"); // vali assets
+
+
+__webpack_require__(/*! ./vali/main */ "./resources/js/vali/main.js"); // VEU
+
+
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /**
  * The following block of code may be used to automatically register your
@@ -49867,6 +49873,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/vali/main.js":
+/*!***********************************!*\
+  !*** ./resources/js/vali/main.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+(function () {
+  "use strict";
+
+  var treeviewMenu = $('.app-menu'); // Toggle Sidebar
+
+  $('[data-toggle="sidebar"]').click(function (event) {
+    event.preventDefault();
+    $('.app').toggleClass('sidenav-toggled');
+  }); // Activate sidebar treeview toggle
+
+  $("[data-toggle='treeview']").click(function (event) {
+    event.preventDefault();
+
+    if (!$(this).parent().hasClass('is-expanded')) {
+      treeviewMenu.find("[data-toggle='treeview']").parent().removeClass('is-expanded');
+    }
+
+    $(this).parent().toggleClass('is-expanded');
+  }); // Set initial active toggle
+
+  $("[data-toggle='treeview.'].is-expanded").parent().toggleClass('is-expanded'); //Activate bootstrip tooltips
+
+  $("[data-toggle='tooltip']").tooltip();
+})();
 
 /***/ }),
 
