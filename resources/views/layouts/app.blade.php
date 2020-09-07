@@ -42,7 +42,7 @@
     <!-- Sidebar menu-->
     <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <aside class="app-sidebar">
-      <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg" alt="User Image">
+      <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="{{ asset('/image/default.png') }}" alt="User Image" width="40">
         <div>
           <p class="app-sidebar__user-name">{{ Auth::user()->name }}</p>
           <p class="app-sidebar__user-designation">Editor</p>
@@ -51,6 +51,7 @@
       <ul class="app-menu">
         <li><a class="app-menu__item" href="{{ route('editor') }}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
         <li><a class="app-menu__item" href="{{ route('post.index') }}"><i class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label">Post</span></a></li>
+        <li><a class="app-menu__item" href="{{ route('postcategory.index') }}"><i class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label">Categorias</span></a></li>
       </ul>
     </aside>
     <main class="app-content">

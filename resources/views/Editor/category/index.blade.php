@@ -3,7 +3,7 @@
 @section('content')
 <div class="app-title">
     <div>
-      <h1><i class="fa fa-dashboard"></i> POST</h1>
+      <h1><i class="fa fa-dashboard"></i> postcategory</h1>
       <p>Talvez alguns numeros aqui</p>
     </div>
     <ul class="app-breadcrumb breadcrumb">
@@ -23,13 +23,16 @@
 
             <div class="row">
                 <div class="col-12 d-flex justify-content-between">
-                    <b>POST</b>
-                    <a class="btn btn-success" href="{{ route('post.create') }}">Criar</a>
+                    <b>Categorias</b>
+                    <a class="btn btn-success" href="{{ route('postcategory.create') }}">nova</a>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-12">
-                    {{ $posts }}
+                    @foreach ($postcategories as $pc)
+                        {{ $postcategories }}
+                    @endforeach
                 </div>
             </div>
         </div>

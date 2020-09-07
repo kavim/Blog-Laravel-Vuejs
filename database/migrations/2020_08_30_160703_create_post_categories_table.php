@@ -23,6 +23,9 @@ class CreatePostCategoriesTable extends Migration
             $table->boolean('block')->default(0);
             $table->boolean('deleted')->default(0);
 
+            $table->unsignedBigInteger('user_id')->default(1);
+            $table->foreign('user_id')->references('id')->on('users');
+
             $table->timestamps();
         });
     }

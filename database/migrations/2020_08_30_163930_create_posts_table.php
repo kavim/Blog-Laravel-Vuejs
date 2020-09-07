@@ -27,6 +27,12 @@ class CreatePostsTable extends Migration
 
             $table->unsignedInteger('order');
 
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreign('category_id')->references('id')->on('post_categories');
+
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
+
             $table->timestamps();
         });
     }
