@@ -9,7 +9,7 @@
 
 
 {{-- content --}}
-<textarea name="content" id="content" cols="30" rows="10">OPA um content aqui</textarea>
+<textarea name="content" id="contenteditor">OPA um content aqui</textarea>
 
 
 <label for="categories" class="m-2"> cat: </label>
@@ -42,3 +42,14 @@
     <label class="form-check-label " for="is_mobile"> Publicar? </label>
     <input class="form-check-input ml-2" type="checkbox" value="1" id="active" name="active" @if($post && $post->active) checked @endif>
 </div>
+
+@section('scripts')
+<script src="https://cdn.ckeditor.com/ckeditor5/22.0.0/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create( document.querySelector( '#contenteditor' ) )
+        .catch( error => {
+            console.error( error );
+        } );
+</script>
+@endsection

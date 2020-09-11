@@ -60,6 +60,7 @@
 
     <script src="{{ asset('js/app.js') }}"></script>
 
+    @yield('scripts')
     <!-- Essential javascripts for application to work-->
     {{-- <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/popper.min.js"></script>

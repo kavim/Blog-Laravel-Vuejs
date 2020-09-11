@@ -29,6 +29,21 @@
             </div>
             <div class="row">
                 <div class="col-12">
+
+
+                    @foreach ($posts as $post)
+
+                    <h1>{{ $post->title }}</h1>
+                    <p>{{ $post->description }}</p>
+                    <p>{{ $post->content }}</p>
+                    <p>{{ $post->subtitle }}</p>
+                    <p>{{ $post->active }}</p>
+                    <p>{{ $post->category_id }}</p>
+
+                    @endforeach
+
+                    <hr>
+
                     {{ $posts }}
                 </div>
             </div>

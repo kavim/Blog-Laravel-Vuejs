@@ -20,7 +20,7 @@ class CreatePostImagesTable extends Migration
             $table->string('src');
             $table->string('caption');
 
-            $table->unsignedBigInteger('post_id')->default(1);
+            $table->unsignedBigInteger('post_id')->nullable();
             $table->foreign('post_id')->references('id')->on('posts');
 
             $table->timestamps();

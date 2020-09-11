@@ -25,7 +25,7 @@ class CreatePostsTable extends Migration
             $table->boolean('block')->default(0);
             $table->boolean('deleted')->default(0);
 
-            $table->unsignedInteger('order');
+            $table->unsignedInteger('order')->nullable();
 
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('post_categories');

@@ -32,14 +32,31 @@ class PostController extends Controller
     public function store(Request $request)
     {
         \Log::info($request);
-        echo 'ok';
 
-        // if($pc){
-        //     return redirect()->route('postcategory.index')->with('msg', 'criado!');
-        // }
+        $request->validate([
+            'title' => ['required', 'max:200'],
+            'subtitle' => ['required', 'max:200'],
+            'description' => ['required', 'max:200'],
+            'postcategory' => ['required'],
+            'active' => ['nullable'],
+        ]);
 
-        // return redirect()->route('postcategory.index')->with('msg', 'erro!');
+        $PostCategory = Post::create([
+            'title' => $request->input('title'),
+            'subtitle' => $request->input('subtitle'),
+            'description' => $request->input('description'),
+            'content' => $request->input('content'),
+            'postcategory' => $request->input('postcategory'),
+            'active' => $request->active == 1 ? 1 : 0,
+            'user_id' => auth()->user()->id,
+        ]);
 
-        return redirect()->route('post.index')->with('msg', 'criado!');
+        if($PostCategory){
+            return redirect()->route('post.index')->with('msg', 'criado!');
+        }
+
+        return redirect()->route('post.index')->with('msg', 'erro!');
+
+        // return redirect()->route('post.index')->with('msg', 'criado!');
     }
 }
