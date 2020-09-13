@@ -30,10 +30,12 @@
             <div class="row">
                 <div class="col-12">
 
-
                     @foreach ($posts as $post)
 
                     <h1>{{ $post->title }}</h1>
+
+                    <p>cover: {{ $post->cover }}</p>
+
                     <p>{{ $post->description }}</p>
                     <p>{{ $post->content }}</p>
                     <p>{{ $post->subtitle }}</p>
