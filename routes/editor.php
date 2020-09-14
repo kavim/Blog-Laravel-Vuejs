@@ -8,6 +8,8 @@ Route::get('/', 'EditorController@index')->name('editor');
 Route::get('/post', 'PostController@index')->name('post.index');
 Route::get('/post/create', 'PostController@create')->name('post.create');
 Route::post('/post/store', 'PostController@store')->name('post.store');
+Route::get('/post/edit/{id}', 'PostController@edit')->name('post.edit');
+Route::put('/post/update', 'PostController@update')->name('post.update');
 
 Route::get('/category', 'PostCategoryController@index')->name('postcategory.index');
 Route::get('/category/create', 'PostCategoryController@create')->name('postcategory.create');

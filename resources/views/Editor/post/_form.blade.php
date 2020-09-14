@@ -1,6 +1,6 @@
 @if ($post)
 
-<div id="fundinho" class="fundinho" style='{{ $opa }}'>
+{{-- <div id="fundinho" class="fundinho" style='{{ $opa }}'>
 
     <div class="text-center">
         <label for="file-upload2" class="de-editar" >
@@ -17,7 +17,7 @@
         <button id="tosave" type="submit" class="de-salvar" style="display: none"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar</button>
     </div>
 
-</div>
+</div> --}}
 
 @endif
 

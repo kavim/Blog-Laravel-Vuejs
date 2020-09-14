@@ -27,7 +27,30 @@
                     <a class="btn btn-success" href="{{ route('post.create') }}">Criar</a>
                 </div>
             </div>
-            <div class="row">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">titulo</th>
+                    <th scope="col">subtitulo</th>
+                    <th scope="col">action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    @foreach ($posts as $post)
+                        <tr>
+                            <th scope="row">{{ $post->id }}</th>
+                            <td>{{ $post->title }}</td>
+                            <td>{{ $post->subtitle }}</td>
+                            <td><a href="/editor/post/edit/{{ $post->id }}" >Editar</a></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+              </table>
+
+
+              {{ $posts->render() }}
+            {{-- <div class="row">
                 <div class="col-12">
 
                     @foreach ($posts as $post)
@@ -48,7 +71,7 @@
 
                     {{ $posts }}
                 </div>
-            </div>
+            </div> --}}
         </div>
       </div>
     </div>

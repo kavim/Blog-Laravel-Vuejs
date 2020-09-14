@@ -16,17 +16,15 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::where('user_id', auth()->user()->id)->where('deleted', 0)->get();
+        $posts = Post::where('user_id', auth()->user()->id)->where('deleted', 0)->paginate(5);
 
         return view('Editor.post.index', compact('posts'));
-
-        // return $posts;
     }
 
     public function create()
     {
         $post = '';
-        $coverSrc = 'background-image: url("'.request()->getSchemeAndHttpHost().'/image/default-cover.png");';;
+        $coverSrc = 'background-image: url("'.request()->getSchemeAndHttpHost().'/image/default-cover.png");';
         $postCategories = PostCategory::where('user_id', auth()->user()->id)->get();
         return view('Editor.post.create', compact('post', 'postCategories', 'coverSrc'));
     }
@@ -39,8 +37,6 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        \Log::info($request);
-
         $request->validate([
             'title' => ['required', 'max:200'],
             'subtitle' => ['required', 'max:200'],
@@ -81,17 +77,21 @@ class PostController extends Controller
         }
 
         return redirect()->route('post.index')->with('msg', 'erro!');
-
-        // return redirect()->route('post.index')->with('msg', 'criado!');
     }
 
     public function edit($id)
     {
+        $post = Post::find($id);
+        $src = count($post->cover) > 1 ? request()->getSchemeAndHttpHost().'/storage/'.$post->cover : 'background-image: url("'.request()->getSchemeAndHttpHost().'/image/default-cover.png");';
+        $coverSrc = $src;
+        $postCategories = PostCategory::where('user_id', auth()->user()->id)->get();
 
-        // enviar junto a img
-        //  $src = auth()->user()->post->image->src != null ? auth()->user()->seller->basic_settings->cover : Auth::user()->seller->seller_type->background;
+        return view('Editor.post.edit', compact('post', 'postCategories', 'coverSrc'));
+    }
 
-        // $opa = 'background-image: url("'.request()->getSchemeAndHttpHost().'/storage/'.$src.'");';
-
+    public function update(Request $request)
+    {
+        \Log::info($request);
+        return 'ok';
     }
 }
