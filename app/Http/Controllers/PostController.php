@@ -37,6 +37,8 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        \Log::info($request);
+
         $request->validate([
             'title' => ['required', 'max:200'],
             'subtitle' => ['required', 'max:200'],
@@ -54,7 +56,6 @@ class PostController extends Controller
             'active' => $request->active == 1 ? 1 : 0,
             'user_id' => auth()->user()->id,
         ]);
-
 
         $this->validate($request, ['cover' => 'image|max:20480',]);
 
@@ -82,16 +83,74 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::find($id);
-        $src = count($post->cover) > 1 ? request()->getSchemeAndHttpHost().'/storage/'.$post->cover : 'background-image: url("'.request()->getSchemeAndHttpHost().'/image/default-cover.png");';
-        $coverSrc = $src;
+        $coverSrc = count($post->cover) > 0 ? request()->getSchemeAndHttpHost().'/storage/'.$post->cover[0]->src : request()->getSchemeAndHttpHost().'/image/default-cover.png';
+        $coverSrc = 'background-image: url("'.$coverSrc.'");';
         $postCategories = PostCategory::where('user_id', auth()->user()->id)->get();
+        \Log::info(count($post->cover));
 
         return view('Editor.post.edit', compact('post', 'postCategories', 'coverSrc'));
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         \Log::info($request);
-        return 'ok';
+
+        $request->validate([
+            'title' => ['required', 'max:200'],
+            'subtitle' => ['required', 'max:200'],
+            'description' => ['required', 'max:200'],
+            'postcategory' => ['required'],
+            'active' => ['nullable'],
+        ]);
+
+        $PostCategory = Post::find($id);
+
+        $PostCategory->update([
+            'title' => $request->input('title'),
+            'subtitle' => $request->input('subtitle'),
+            'description' => $request->input('description'),
+            'content' => $request->input('content'),
+            'postcategory' => $request->input('postcategory'),
+            'active' => $request->active == 1 ? 1 : 0,
+        ]);
+
+        $this->validate($request, ['cover' => 'image|max:20480',]);
+
+        if($request->hasFile('cover')) {
+            $src = $request->file('cover')->store("post/image/" . Carbon::now()->format('Y-m-d'), 'public');
+
+            $PostImage = PostImage::where('post_id', $PostCategory->id)->first();
+
+            \Log::info($PostImage);
+
+            if($PostImage){
+                $PostImage->update([
+                    'name' => Str::slug($PostCategory->title, '-'),
+                    'caption' => Str::slug($PostCategory->title, '-'),
+                    'src' => $src,
+                ]);
+
+                \Log::info("if");
+            }else{
+                $img = PostImage::create([
+                    'name' => Str::slug($PostCategory->title, '-'),
+                    'caption' => Str::slug($PostCategory->title, '-'),
+                    'src' => $src,
+                    'post_id' => $PostCategory->id
+                ]);
+
+                \Log::info("else");
+            }
+
+            // $image = Imagem::make(storage_path("app/public/".$src))->save();
+            $image = Imagem::make(storage_path("app/public/".$src))->fit(1280, 720)->save();
+            $image->save();
+        }
+
+        if($PostCategory){
+            return redirect()->route('post.index')->with('msg', 'Atualizado!');
+        }
+
+        return redirect()->route('post.index')->with('erromsg', 'erro!');
     }
 }

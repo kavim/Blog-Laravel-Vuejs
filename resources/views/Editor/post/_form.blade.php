@@ -36,7 +36,7 @@
 
 </div>
 
-<input id="file-upload2" type="file" name="cover" accept="image/png, image/jpeg, image/jpg"/>
+{{-- <input id="file-upload2" type="file" name="cover" accept="image/png, image/jpeg, image/jpg"/> --}}
 
 <br>
 

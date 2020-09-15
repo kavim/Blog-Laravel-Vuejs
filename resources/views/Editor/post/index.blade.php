@@ -20,6 +20,11 @@
                     <i class="fa fa-check" aria-hidden="true"></i> <b> {{ session('msg') }} </b>
                 </div>
             @endif
+            @if (session('erromsg'))
+                <div class="alert alert-danger">
+                    <i class="fa fa-check" aria-hidden="true"></i> <b> {{ session('msg') }} </b>
+                </div>
+            @endif
 
             <div class="row">
                 <div class="col-12 d-flex justify-content-between">
