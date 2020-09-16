@@ -81,7 +81,9 @@ class PostCategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $postcategory = PostCategory::find($id);
+
+        return view('Editor.category.edit', compact('postcategory'));
     }
 
     /**
@@ -93,7 +95,25 @@ class PostCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        \Log::info($request);
+
+        $PostCategory = PostCategory::find($id);
+
+        $this->validate($request, [
+            'name' => 'string|max:150',
+            'block' => 'nullable'
+        ]);
+
+        $pc = $PostCategory->update([
+            'name' => $request->get('name'),
+            'block' => $request->get('block') ? 1 : 0,
+        ]);
+
+        if($pc){
+            return redirect()->route('postcategory.index')->with('msg', 'Atualizado!');
+        }
+
+        return redirect()->route('postcategory.index')->with('msg', 'erro!');
     }
 
     /**

@@ -30,9 +30,22 @@
 
             <div class="row">
                 <div class="col-12">
-                    @foreach ($postcategories as $pc)
-                        {{ $postcategories }}
-                    @endforeach
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">nome</th>
+                            <th scope="col">action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($postcategories as $pc)
+                                <tr>
+                                    <td>{{ $pc->name }}</td>
+                                    <td><a href="/editor/category/edit/{{ $pc->id }}" >Editar</a></td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                      </table>
                 </div>
             </div>
         </div>

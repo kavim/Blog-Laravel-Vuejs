@@ -19,4 +19,11 @@ class Post extends Model
     public function category () {
         return $this->belongsToMany(PostCategory::class, 'user_id');
     }
+
+    public function getCover($id)
+    {
+        $cover = PostImage::where('post_id', $id)->first();
+
+        return $cover ? '/storage/'.$cover->src : '/image/default-cover.png';
+    }
 }

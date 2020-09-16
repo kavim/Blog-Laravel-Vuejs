@@ -36,6 +36,7 @@
                 <thead>
                   <tr>
                     <th scope="col">#</th>
+                    <th scope="col">capa</th>
                     <th scope="col">titulo</th>
                     <th scope="col">subtitulo</th>
                     <th scope="col">action</th>
@@ -45,6 +46,7 @@
                     @foreach ($posts as $post)
                         <tr>
                             <th scope="row">{{ $post->id }}</th>
+                            <td><img src="{{ $post->getCover($post->id) }}" width="100" alt=""></td>
                             <td>{{ $post->title }}</td>
                             <td>{{ $post->subtitle }}</td>
                             <td><a href="/editor/post/edit/{{ $post->id }}" >Editar</a></td>

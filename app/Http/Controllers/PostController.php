@@ -16,7 +16,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::where('user_id', auth()->user()->id)->where('deleted', 0)->paginate(5);
+        $posts = Post::where('user_id', auth()->user()->id)->where('deleted', 0)->orderBy('id', 'DESC')->paginate(5);
 
         return view('Editor.post.index', compact('posts'));
     }
@@ -110,7 +110,7 @@ class PostController extends Controller
             'subtitle' => $request->input('subtitle'),
             'description' => $request->input('description'),
             'content' => $request->input('content'),
-            'postcategory' => $request->input('postcategory'),
+            'category_id' => $request->input('postcategory'),
             'active' => $request->active == 1 ? 1 : 0,
         ]);
 
