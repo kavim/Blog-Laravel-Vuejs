@@ -10,4 +10,26 @@ class AdminController extends Controller
     {
         return view("Admin.index");
     }
+
+    public function users()
+    {
+        $users = \App\User::get();
+
+        return view("Admin.user.index", compact('users'));
+    }
+
+    public function user_edit($id)
+    {
+        $user = \App\User::find($id);
+
+        return view("Admin.user.edit", compact('user'));
+    }
+
+    public function user_upload(Request $request, $id)
+    {
+        $user = \App\User::find($id);
+
+        // return view("Admin.user.edit", compact('user'));
+    }
+
 }

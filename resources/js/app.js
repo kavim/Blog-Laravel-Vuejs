@@ -12,6 +12,10 @@ require('popper.js');
 
 require('./vali/main');
 
+var mask = require('jquery-mask-plugin/dist/jquery.mask.min.js');
+$.mask = mask;
+window.mask = mask;
+
 // VEU
 
 

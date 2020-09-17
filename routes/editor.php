@@ -16,3 +16,7 @@ Route::get('/category/create', 'PostCategoryController@create')->name('postcateg
 Route::post('/category/store', 'PostCategoryController@store')->name('postcategory.store');
 Route::get('/category/edit/{id}', 'PostCategoryController@edit')->name('postcategory.edit');
 Route::post('/category/update/{id}', 'PostCategoryController@update')->name('postcategory.update');
+
+Route::get('/profile', 'UserController@profile')->name('profile');
+Route::get('/profile/edit', 'UserController@profile_edit')->name('profile.edit');
+Route::put('/profile/update', 'UserController@profile_update')->name('profile.update');

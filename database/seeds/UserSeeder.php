@@ -15,7 +15,24 @@ class UserSeeder extends Seeder
             'email' => 'tester@tester.com',
             'name'  => 'tester',
             'lastname'  => 'testerson',
+            'phone'  => '00000000000',
             'user_type_id' => 2,
+            'password' => bcrypt('123123123')
+        ]);
+        \App\User::create([
+            'email' => 'editor@editor.com',
+            'name'  => 'editor',
+            'lastname'  => 'editorson',
+            'phone'  => '00000000000',
+            'user_type_id' => 2,
+            'password' => bcrypt('123123123')
+        ]);
+        \App\User::create([
+            'email' => 'admin@admin.com',
+            'name'  => 'tester',
+            'lastname'  => 'testerson',
+            'phone'  => '00000000000',
+            'user_type_id' => 3,
             'password' => bcrypt('123123123')
         ]);
 
