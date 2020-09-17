@@ -32,9 +32,20 @@
         <!-- User Menu-->
         <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
           <ul class="dropdown-menu settings-menu dropdown-menu-right">
-            <li><a class="dropdown-item" href="page-user.html"><i class="fa fa-cog fa-lg"></i> Settings</a></li>
-            <li><a class="dropdown-item" href="page-user.html"><i class="fa fa-user fa-lg"></i> Profile</a></li>
-            <li><a class="dropdown-item" href="page-login.html"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
+            {{-- <li><a class="dropdown-item" href="page-user.html"><i class="fa fa-cog fa-lg"></i> Settings</a></li> --}}
+            {{-- <li><a class="dropdown-item" href="page-user.html"><i class="fa fa-user fa-lg"></i> Profile</a></li> --}}
+            {{-- <li><a class="dropdown-item" href="page-login.html"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li> --}}
+            <li>
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                    {{ __('Logout') }}
+                </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </li>
           </ul>
         </li>
       </ul>
@@ -51,7 +62,7 @@
       <ul class="app-menu">
         <li><a class="app-menu__item" href="{{ route('editor') }}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
         <li><a class="app-menu__item" href="{{ route('post.index') }}"><i class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label">Post</span></a></li>
-        <li><a class="app-menu__item" href="{{ route('postcategory.index') }}"><i class="app-menu__icon fa fa-newspaper-o"></i><span class="app-menu__label">Categorias</span></a></li>
+        <li><a class="app-menu__item" href="{{ route('postcategory.index') }}"><i class="app-menu__icon fa fa-clone"></i><span class="app-menu__label">Categorias</span></a></li>
       </ul>
     </aside>
     <main class="app-content">

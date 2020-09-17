@@ -83,7 +83,15 @@ class PostCategoryController extends Controller
     {
         $postcategory = PostCategory::find($id);
 
-        return view('Editor.category.edit', compact('postcategory'));
+        if($postcategory->user_id != auth()->user()->id){
+            return view('Editor.access_denied');
+        }
+
+        if($postcategory){
+            return view('Editor.category.edit', compact('postcategory'));
+        }
+
+        return redirect()->route('postcategory.index');
     }
 
     /**

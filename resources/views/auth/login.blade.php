@@ -17,6 +17,18 @@
                     </div>
                 @endif
 
+                @if($errors->any())
+                    @foreach ($errors->all() as $error)
+                    <h1>{{ $error }}</h1>
+                    @endforeach
+                @endif
+
+                @if (session('nop'))
+                    <div class="alert alert-danger m-4 ">
+                        <i class="fa fa-check" aria-hidden="true"></i> <b> {{ session('nop') }} </b>
+                    </div>
+                @endif
+
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
