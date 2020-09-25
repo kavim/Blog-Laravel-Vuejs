@@ -65,6 +65,7 @@
     <input class="form-check-input ml-2" type="checkbox" value="1" id="active" name="active" @if($post && $post->active) checked @endif>
 </div>
 
+
 @section('scripts')
 <script src="https://cdn.ckeditor.com/ckeditor5/22.0.0/classic/ckeditor.js"></script>
 <script>
@@ -73,6 +74,23 @@
         .catch( error => {
             console.error( error );
         } );
+</script>
+<script type="text/javascript">
+
+
+    $(document).ready(function() {
+
+      $(".btn-success").click(function(){
+          var html = $(".clone").html();
+          $(".increment").after(html);
+      });
+
+      $("body").on("click",".btn-danger",function(){
+          $(this).parents(".control-group").remove();
+      });
+
+    });
+
 </script>
 <script>
     function readURL(input) {

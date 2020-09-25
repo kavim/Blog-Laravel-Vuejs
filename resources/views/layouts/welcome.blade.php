@@ -73,5 +73,7 @@
             @yield('content')
         </main>
     </div>
+
+    <script src="{{ asset('js/welcome.js') }}"></script>
 </body>
 </html>
