@@ -12,6 +12,10 @@ class Post extends Model
         return $this->belongsTo(PostImage::class);
     }
 
+    public function video () {
+        return $this->hasMany(PostVideo::class, 'post_id');
+    }
+
     public function cover () {
         return $this->hasMany(PostImage::class, 'post_id');
     }

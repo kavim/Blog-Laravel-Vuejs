@@ -73,6 +73,19 @@ class PostController extends Controller
             $image->save();
         }
 
+        if(count($request->videos)>0){
+            foreach ($request->videos as $key => $video) {
+
+                if($video != NULL) {
+                    \App\PostVideo::create([
+                        'src' => $video,
+                        'post_id' => $PostCategory->id
+                    ]);
+                }
+
+            }
+        }
+
         if($PostCategory){
             return redirect()->route('post.index')->with('msg', 'criado!');
         }
@@ -86,9 +99,10 @@ class PostController extends Controller
         $coverSrc = count($post->cover) > 0 ? request()->getSchemeAndHttpHost().'/storage/'.$post->cover[0]->src : request()->getSchemeAndHttpHost().'/image/default-cover.png';
         $coverSrc = 'background-image: url("'.$coverSrc.'");';
         $postCategories = PostCategory::where('user_id', auth()->user()->id)->get();
-        \Log::info(count($post->cover));
 
-        return view('Editor.post.edit', compact('post', 'postCategories', 'coverSrc'));
+        // \Log::info(count($post->cover));
+
+        return view('Editor.post.editPost', compact('post', 'postCategories', 'coverSrc'));
     }
 
     public function update(Request $request, $id)
@@ -146,6 +160,23 @@ class PostController extends Controller
             $image = Imagem::make(storage_path("app/public/".$src))->fit(1280, 720)->save();
             $image->save();
         }
+
+        \App\PostVideo::where('post_id')->delete();
+
+
+        if(count($request->videos)>0){
+            foreach ($request->videos as $key => $video) {
+
+                if($video != NULL) {
+                    \App\PostVideo::create([
+                        'src' => $video,
+                        'post_id' => $PostCategory->id
+                    ]);
+                }
+
+            }
+        }
+
 
         if($PostCategory){
             return redirect()->route('post.index')->with('msg', 'Atualizado!');

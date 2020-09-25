@@ -4,11 +4,11 @@
 <div class="app-title">
     <div>
       <h1><i class="fa fa-dashboard"></i> POST</h1>
-      <p>Talvez alguns numeros aqui</p>
+      {{-- <p>Talvez alguns numeros aqui</p> --}}
     </div>
     <ul class="app-breadcrumb breadcrumb">
       <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-      <li class="breadcrumb-item"><a href="#">caminho de pão</a></li>
+      <li class="breadcrumb-item"><a href="#">Lista de post</a></li>
     </ul>
   </div>
   <div class="row">
@@ -27,7 +27,7 @@
             @endif
 
             <div class="row">
-                <div class="col-12 d-flex justify-content-between">
+                <div class="col-12 d-flex justify-content-between py-2">
                     <b>POST</b>
                     <a class="btn btn-success" href="{{ route('post.create') }}">Criar</a>
                 </div>

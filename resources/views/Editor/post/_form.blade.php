@@ -1,26 +1,3 @@
-@if ($post)
-
-{{-- <div id="fundinho" class="fundinho" style='{{ $opa }}'>
-
-    <div class="text-center">
-        <label for="file-upload2" class="de-editar" >
-            <i class="fa fa-cloud-upload"></i> Alterar capa
-        </label>
-        <input id="file-upload2" type="file" name="cover" accept="image/png, image/jpeg, image/jpg"/>
-
-        <input id="toremove" type="hidden" name="toremove" value="0"/>
-
-        @if ($post->cover != null)
-            <button class="de-remover" type="button" id="remover"><i class="fa fa-trash" aria-hidden="true"></i> Remover</button>
-        @endif
-
-        <button id="tosave" type="submit" class="de-salvar" style="display: none"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar</button>
-    </div>
-
-</div> --}}
-
-@endif
-
 <div id="fundinho" class="fundinho" style='{{ $coverSrc }}'>
 
     <div class="text-center">
@@ -36,7 +13,6 @@
 
 </div>
 
-{{-- <input id="file-upload2" type="file" name="cover" accept="image/png, image/jpeg, image/jpg"/> --}}
 
 <br>
 
@@ -49,9 +25,11 @@
 <label for="description" class="m-2"> description: </label>
 <input type="text" id="description" name="description" class="form-control col-6" required @if($post) value="{{ $post->description }}" @else placeholder="description: " @endif>
 
-
+<br>
+<br>
 {{-- content --}}
-<textarea name="content" id="contenteditor">OPA um content aqui</textarea>
+<label for="w3review">Conteudo:</label>
+<textarea rows="10" name="content" id="contenteditor">OPA um content aqui</textarea>
 
 <label for="categories" class="m-2"> cat: </label>
 <select name="postcategory" class="form-control col-6" id="categories" required>
@@ -59,6 +37,28 @@
         <option value="{{$pc->id}}" @if($post && $pc->id == $post->category_id) selected @endif > {{ $pc->name }} </option>
     @endforeach
 </select>
+
+
+<h1>
+    {{-- {{ $post->video[0]->src }} --}}
+</h1>
+
+<div class="my-2">
+
+    <label for="video" class="m-2"> video: </label>
+    <input type="text" id="video" name="videos[]" class="form-control col-6" onchange="loadVideo(this.value)" placeholder="cole o link do video aqui" @if($post && count($post->video)>0) value="{{ $post->video[0]->src }}"@endif>
+
+    <br>
+
+    <div id="myCode"></div>
+    <div id="myId"></div>
+
+</div>
+
+
+<br>
+<br>
+
 
 <div class="m-2">
     <label class="form-check-label " for="is_mobile"> Publicar? </label>
@@ -75,22 +75,39 @@
             console.error( error );
         } );
 </script>
-<script type="text/javascript">
+<script>
+    function getId(url) {
+            var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            var match = url.match(regExp);
 
+            if (match && match[2].length == 11) {
+                return match[2];
+            } else {
+                return 'error';
+            }
+        }
 
-    $(document).ready(function() {
+        var myId;
+        function loadVideo(that) {
+            // var myUrl = $('#link_video').val();
 
-      $(".btn-success").click(function(){
-          var html = $(".clone").html();
-          $(".increment").after(html);
-      });
+            var myUrl = that;
 
-      $("body").on("click",".btn-danger",function(){
-          $(this).parents(".control-group").remove();
-      });
+            if(myUrl === " " || myUrl === ""){
+                console.log(myUrl);
+            }else{
+                myId = getId(myUrl);
+                $('#myId').html(myId);
+                if(myId != 'error'){
+                    $('#myCode').html('<iframe width="560" height="315" src="https://www.youtube.com/embed/' + myId + '" frameborder="0" allowfullscreen></iframe>');
+                }
+            }
 
-    });
+                // console.log(that.value);
 
+        }
+
+        loadVideo($("#video").val());
 </script>
 <script>
     function readURL(input) {

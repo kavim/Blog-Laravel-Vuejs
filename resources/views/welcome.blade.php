@@ -7,7 +7,7 @@
         <div class="col-md-8">
             <h2>home</h2>
 
-            <example-component></example-component>
+            {{-- <example-component></example-component> --}}
         </div>
     </div>
 </div>

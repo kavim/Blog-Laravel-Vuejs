@@ -16,9 +16,9 @@ class CreatePostVideosTable extends Migration
         Schema::create('post_videos', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('src');
-            $table->string('caption');
+            $table->string('caption')->nullable();
 
             $table->unsignedBigInteger('post_id')->nullable();
             $table->foreign('post_id')->references('id')->on('posts');

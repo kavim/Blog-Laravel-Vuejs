@@ -5,7 +5,7 @@
 
     <div class="row mt-4">
         <div class="col-lg-10">
-            <h3 class="page-header"> Criar cat </h3>
+            <h3 class="page-header"> Editar categoria </h3>
         </div>
         <div class="col-lg-2">
             <a href="{{ url()->previous() }}" class="btn btn-secondary btn-block"> <i class="fa fa-arrow-left"></i> Voltar </a>

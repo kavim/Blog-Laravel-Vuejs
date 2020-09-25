@@ -19,9 +19,6 @@
                 <div class="col-lg-10">
                     <h3 class="page-header"> Novo post </h3>
                 </div>
-                <div class="col-lg-2">
-                    <a href="{{ url()->previous() }}" class="btn btn-secondary btn-block"> <i class="fa fa-arrow-left"></i> Voltar </a>
-                </div>
             </div>
 
             @if ($errors->any())
@@ -40,8 +37,12 @@
 
                     @include('Editor.post._form')
 
-                    <div class="col-12 m-2">
-                        <button type="submit" class="btn btn-success btn-block">Salvar</button>
+                    <div class="tile-footer">
+                        <div class="row">
+                          <div class="col-md-8 col-md-offset-3">
+                            <button type="submit" class="btn btn-primary" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Salvar</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="#"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancelar</a>
+                          </div>
+                        </div>
                     </div>
                 </form>
             </div>
