@@ -67,7 +67,7 @@
         <li><a class="app-menu__item" href="{{ route('postcategory.index') }}"><i class="app-menu__icon fa fa-clone"></i><span class="app-menu__label">Categorias</span></a></li>
       </ul>
     </aside>
-    <main class="app-content">
+    <main class="app-content" id="app">
       @yield('content')
     </main>
 

@@ -184,4 +184,19 @@ class PostController extends Controller
 
         return redirect()->route('post.index')->with('erromsg', 'erro!');
     }
+
+    public function manager($id = null)
+    {
+        return view('Editor.post.manager');
+    }
+
+    public function save(Request $request)
+    {
+
+        \Log::info($request);
+
+        return [
+            'status' => true
+        ];
+    }
 }

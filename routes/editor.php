@@ -11,6 +11,9 @@ Route::post('/post/store', 'PostController@store')->name('post.store');
 Route::get('/post/edit/{id}', 'PostController@edit')->name('post.edit');
 Route::put('/post/update/{id}', 'PostController@update')->name('post.update');
 
+Route::get('/post/manager/{id?}', 'PostController@manager');
+Route::post('/post/save', 'PostController@save');
+
 Route::get('/category', 'PostCategoryController@index')->name('postcategory.index');
 Route::get('/category/create', 'PostCategoryController@create')->name('postcategory.create');
 Route::post('/category/store', 'PostCategoryController@store')->name('postcategory.store');
