@@ -18,11 +18,12 @@ window.mask = mask;
 
 // VEU
 
-
-
 window.Vue = require('vue');
 
 import store from './store.js';
+
+import CKEditor from '@ckeditor/ckeditor5-vue';
+Vue.use( CKEditor );
 
 /**
  * The following block of code may be used to automatically register your

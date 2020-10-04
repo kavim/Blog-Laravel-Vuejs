@@ -195,6 +195,28 @@ class PostController extends Controller
 
         \Log::info($request);
 
+        \Log::info(' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ');
+
+        return [
+            'status' => true
+        ];
+    }
+    public function saveCover(Request $request)
+    {
+
+        \Log::info($request);
+        \Log::info(' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ');
+
+        return [
+            'status' => true
+        ];
+    }
+    public function saveImages(Request $request)
+    {
+
+        \Log::info($request);
+        \Log::info(' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ');
+
         return [
             'status' => true
         ];

@@ -13,6 +13,8 @@ Route::put('/post/update/{id}', 'PostController@update')->name('post.update');
 
 Route::get('/post/manager/{id?}', 'PostController@manager');
 Route::post('/post/save', 'PostController@save');
+Route::post('/post-cover/save', 'PostController@saveCover');
+Route::post('/post-images/save', 'PostController@saveImages');
 
 Route::get('/category', 'PostCategoryController@index')->name('postcategory.index');
 Route::get('/category/create', 'PostCategoryController@create')->name('postcategory.create');

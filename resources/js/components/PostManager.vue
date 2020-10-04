@@ -1,18 +1,21 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">Example Component</div>
 
                     <div class="card-body">
-                        I'm an example component.
 
                         <cover></cover>
 
                         <post></post>
 
                         <images></images>
+
+                        <hr>
+
+                        <button @click="saveIt" class="btn btn-success btn-block">Salvar</button>
 
                     </div>
                 </div>
@@ -25,6 +28,14 @@
     export default {
         mounted() {
             console.log('Component mounted.')
+        },
+        methods: {
+            saveIt(){
+
+                console.log("click");
+
+                this.$store.dispatch('save');
+            }
         }
     }
 </script>

@@ -75,7 +75,8 @@ export default {
         },
         addImage(file) {
             if (!file.type.match('image.*')) {
-                this.$toastr.e(`${file.name} is not an image`);
+                // this.$toastr.e(`${file.name} is not an image`);
+                console.log(`${file.name} is not an image`);
                 return;
             }
 
@@ -87,6 +88,8 @@ export default {
             reader.onload = (e) => this.images.push(e.target.result);
 
             reader.readAsDataURL(file);
+
+            this.syncdata();
         },
         getFileSize(size) {
             const fSExt = ['Bytes', 'KB', 'MB', 'GB'];
@@ -112,7 +115,10 @@ export default {
                     this.images = [];
                     this.files = [];
                 })
-        }
+        },
+        syncdata() {
+            this.$store.dispatch("setImages", this.files);
+        },
     }
 }
 </script>
