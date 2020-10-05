@@ -2207,6 +2207,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2236,6 +2265,46 @@ __webpack_require__.r(__webpack_exports__);
         title: this.videoToAdd.title,
         link: this.videoToAdd.link
       });
+      this.videoToAdd = {
+        title: '',
+        link: ''
+      };
+    },
+    removeVideo: function removeVideo(obj) {
+      var index = this.videos.indexOf(obj);
+
+      if (index > -1) {
+        this.videos.splice(index, 1);
+      }
+    },
+    embData: function embData(url) {
+      function getId(val) {
+        var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        var match = url.match(regExp);
+
+        if (match && match[2].length == 11) {
+          return match[2];
+        } else {
+          return 'error';
+        }
+      }
+
+      var retorno = '';
+
+      if (url === " " || url === "") {
+        console.log(url);
+        retorno = '';
+      } else {
+        var vid = getId(url);
+
+        if (vid != 'error') {
+          retorno = '<iframe width="100%" height="315" src="https://www.youtube.com/embed/' + vid + '" frameborder="0" allowfullscreen></iframe>';
+        } else {
+          retorno = '';
+        }
+      }
+
+      return retorno;
     }
   },
   watch: {
@@ -2244,6 +2313,15 @@ __webpack_require__.r(__webpack_exports__);
         this.syncdata();
       },
       deep: true
+    }
+  },
+  computed: {
+    addVideoIsDisabled: function addVideoIsDisabled() {
+      if (this.videoToAdd.link != '' && this.videoToAdd.link != ' ') {
+        return false;
+      }
+
+      return true;
     }
   }
 });
@@ -2259,6 +2337,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -38800,7 +38880,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
+  return _c("div", { staticClass: "row my-4" }, [
     _vm._v("\n\n    " + _vm._s(this.post) + "\n\n    "),
     _c("div", { staticClass: "col-12" }, [
       _c("div", { staticClass: "form-group" }, [
@@ -38861,37 +38941,15 @@ var render = function() {
       { staticClass: "col-12" },
       [
         _c("hr"),
-        _vm._v("\n        Vincular video.\n        "),
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "videoToAddtitle" } }, [
-            _vm._v("titulo")
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.videoToAdd.title,
-                expression: "videoToAdd.title"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { type: "text", id: "videoToAddtitle" },
-            domProps: { value: _vm.videoToAdd.title },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.videoToAdd, "title", $event.target.value)
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "videoToAdd" } }, [_vm._v("link")]),
+        _vm._v(
+          "\n        Vincular video, cole o link do youtube aqui\n\n        "
+        ),
+        _c("div", { staticClass: "input-group mb-3" }, [
+          _c(
+            "label",
+            { staticClass: "sr-only", attrs: { for: "videoToAdd" } },
+            [_vm._v("Password")]
+          ),
           _vm._v(" "),
           _c("input", {
             directives: [
@@ -38902,8 +38960,13 @@ var render = function() {
                 expression: "videoToAdd.link"
               }
             ],
-            staticClass: "form-control",
-            attrs: { type: "text", id: "videoToAdd" },
+            staticClass: "form-control col-12",
+            attrs: {
+              type: "text",
+              id: "videoToAdd",
+              "aria-label": "Recipient's videoToAdd",
+              "aria-describedby": "basic-videoToAdd"
+            },
             domProps: { value: _vm.videoToAdd.link },
             on: {
               input: function($event) {
@@ -38913,26 +38976,48 @@ var render = function() {
                 _vm.$set(_vm.videoToAdd, "link", $event.target.value)
               }
             }
-          })
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group-append" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-outline-primary",
+                attrs: { type: "button", disabled: _vm.addVideoIsDisabled },
+                on: {
+                  click: function($event) {
+                    return _vm.addVideo()
+                  }
+                }
+              },
+              [_vm._v("Adicionar")]
+            )
+          ])
         ]),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-success",
-            attrs: { type: "button" },
-            on: {
-              click: function($event) {
-                return _vm.addVideo()
-              }
-            }
-          },
-          [_vm._v("ADD")]
-        ),
         _vm._v(" "),
         _vm._l(_vm.videos, function(video, index) {
           return _c("div", { key: index }, [
-            _vm._v("\n            " + _vm._s(video) + "\n        ")
+            _vm._v("\n            " + _vm._s(video) + "\n            "),
+            _c("div", { staticClass: "card", staticStyle: { width: "100%" } }, [
+              _c("div", {
+                domProps: { innerHTML: _vm._s(_vm.embData(video.link)) }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-body" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    on: {
+                      click: function($event) {
+                        return _vm.removeVideo(video)
+                      }
+                    }
+                  },
+                  [_vm._v("Remover")]
+                )
+              ])
+            ])
           ])
         })
       ],
@@ -38977,6 +39062,8 @@ var render = function() {
               _c("cover"),
               _vm._v(" "),
               _c("post"),
+              _vm._v(" "),
+              _c("hr"),
               _vm._v(" "),
               _c("images"),
               _vm._v(" "),
@@ -52483,7 +52570,7 @@ Vue.component('cover', __webpack_require__(/*! ./components/Cover.vue */ "./reso
  */
 
 var app = new Vue({
-  el: '#app',
+  el: '#editorapp',
   store: _store_js__WEBPACK_IMPORTED_MODULE_0__["default"]
 });
 

@@ -50,6 +50,6 @@ Vue.component('cover', require('./components/Cover.vue').default);
  */
 
 const app = new Vue({
-    el: '#app',
+    el: '#editorapp',
     store: store
 });

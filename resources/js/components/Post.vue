@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row my-4">
 
         {{ this.post }}
 
@@ -20,7 +20,7 @@
         </div>
 
         <div class="col-12">
-            <hr>
+            <!-- <hr>
             Vincular video.
             <div class="form-group">
                 <label for="videoToAddtitle">titulo</label>
@@ -29,14 +29,43 @@
             <div class="form-group">
                 <label for="videoToAdd">link</label>
                 <input v-model="videoToAdd.link" type="text" class="form-control" id="videoToAdd">
+            </div> -->
+
+            <!-- <form class="form-inline">
+                <div class="form-group mb-2">
+                    <label for="videoToAdd" class="sr-only">Password</label>
+                    <input v-model="videoToAdd.link" type="text" class="form-control" id="videoToAdd">
+                </div>
+
+                <button @click="addVideo()" type="button" class="btn btn-primary">ADD</button>
+            </form> -->
+
+            <hr>
+            Vincular video, cole o link do youtube aqui
+
+            <div class="input-group mb-3">
+                <label for="videoToAdd" class="sr-only">Password</label>
+                <input v-model="videoToAdd.link" type="text" class="form-control col-12" id="videoToAdd" aria-label="Recipient's videoToAdd" aria-describedby="basic-videoToAdd">
+
+                <div class="input-group-append">
+                    <button @click="addVideo()" type="button" class="btn btn-outline-primary" :disabled="addVideoIsDisabled">Adicionar</button>
+                </div>
             </div>
-
-            <button @click="addVideo()" type="button" class="btn btn-success">ADD</button>
-
             <div v-for="(video, index) in videos" :key="index">
                 {{ video }}
+                <div class="card" style="width: 100%">
+
+                    <div v-html="embData(video.link)"></div>
+
+                <div class="card-body">
+                    <button @click="removeVideo(video)" class="btn btn-danger">Remover</button>
+                </div>
+                </div>
             </div>
+
         </div>
+
+
 
     </div>
 </template>
@@ -80,6 +109,49 @@
                         link: this.videoToAdd.link
                     }
                 );
+
+                this.videoToAdd = {
+                    title: '',
+                    link: ''
+                }
+            },
+            removeVideo(obj){
+                const index = this.videos.indexOf(obj);
+
+                if (index > -1) {
+                    this.videos.splice(index, 1);
+                }
+            },
+            embData(url){
+
+                function getId(val) {
+                    var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                    var match = url.match(regExp);
+
+                    if (match && match[2].length == 11) {
+                        return match[2];
+                    } else {
+                        return 'error';
+                    }
+                }
+
+                let retorno = '';
+
+                if(url === " " || url === ""){
+                    console.log(url);
+
+                    retorno = '';
+                }else{
+                    let vid = getId(url);
+
+                    if(vid != 'error'){
+                        retorno = '<iframe width="100%" height="315" src="https://www.youtube.com/embed/' + vid + '" frameborder="0" allowfullscreen></iframe>'
+                    }else{
+                        retorno = '';
+                    }
+                }
+
+                return retorno;
             }
         },
         watch: {
@@ -88,6 +160,16 @@
                     this.syncdata();
                 },
                 deep: true
+            }
+        },
+        computed: {
+            addVideoIsDisabled(){
+
+                if(this.videoToAdd.link != '' && this.videoToAdd.link != ' '){
+                    return false;
+                }
+
+                return true;
             }
         }
     }

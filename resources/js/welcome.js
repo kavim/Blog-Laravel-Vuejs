@@ -12,18 +12,33 @@ require('popper.js');
 
 window.Vue = require('vue');
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
-
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+
+
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
+import Home from './components/blog/Home.vue'
+import About from './components/blog/About.vue'
+
+const router = new VueRouter({
+    mode: 'history',
+    routes: [
+        {
+            path: '/',
+            name: 'home',
+            component: Home
+        },
+        {
+            path: '/sobre',
+            name: 'sobre',
+            component: About,
+        },
+    ],
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -33,4 +48,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+    router,
 });

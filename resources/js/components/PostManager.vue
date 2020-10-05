@@ -11,6 +11,8 @@
 
                         <post></post>
 
+                        <hr>
+
                         <images></images>
 
                         <hr>
