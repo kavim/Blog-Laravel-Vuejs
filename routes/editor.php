@@ -25,3 +25,6 @@ Route::post('/category/update/{id}', 'PostCategoryController@update')->name('pos
 Route::get('/profile', 'UserController@profile')->name('profile');
 Route::get('/profile/edit', 'UserController@profile_edit')->name('profile.edit');
 Route::put('/profile/update', 'UserController@profile_update')->name('profile.update');
+
+// api return
+Route::get('/get-cats', 'PostController@getEditorCats');

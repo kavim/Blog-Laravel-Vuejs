@@ -20,6 +20,20 @@
         </div>
 
         <div class="col-12">
+            {{ cats }}
+
+            <hr>
+
+            <label for="category_id" class="m-2"> Categoria: </label>
+            <select v-model="selectedCat" class="form-control">
+                <option disabled value="0">Categoria</option>
+                <option v-for="option in categoriesAs" v-bind:value="option.value" :key="option.value">
+                    {{ option.text }}
+                </option>
+            </select>
+        </div>
+
+        <div class="col-12">
             <!-- <hr>
             Vincular video.
             <div class="form-group">
@@ -96,6 +110,8 @@
                     ],
                     },
                 },
+                cats: this.$store.state.cats,
+                selectedCat: 0
             }
         },
         methods: {
@@ -170,7 +186,24 @@
                 }
 
                 return true;
-            }
+            },
+            categoriesAs: function(){
+
+                let retorno = [];
+                this.$store.state.cats.forEach(cat => {
+                    if(this.post.category_id == cat.id){
+                        this.selectedCat = cat.id;
+                    }
+
+                    retorno.push({ text: cat.name, value: cat.id });
+                });
+
+                if(this.post.category_id == null || this.post.category_id == 0){
+                    this.selectedCat = 0;
+                }
+
+                return retorno;
+            },
         }
     }
 </script>

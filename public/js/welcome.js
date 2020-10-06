@@ -53241,7 +53241,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _components_blog_Home_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/blog/Home.vue */ "./resources/js/components/blog/Home.vue");
-/* harmony import */ var _components_blog_About_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/blog/About.vue */ "./resources/js/components/blog/About.vue");
+/* harmony import */ var _components_blog_About_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/blog/About.vue */ "./resources/js/components/blog/About.vue");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -53269,7 +53269,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   }, {
     path: '/sobre',
     name: 'sobre',
-    component: _components_blog_About_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+    component: _components_blog_About_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   }]
 });
 /**

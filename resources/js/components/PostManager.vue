@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header">Example Component</div>
 
-                    <div class="card-body">
+                    <div class="card-body" v-if="this.$store.state.loadAssets.cats == 1">
 
                         <cover></cover>
 
@@ -31,7 +31,18 @@
         mounted() {
             console.log('Component mounted.')
         },
+        created: function(){
+
+            this.initAssets();
+
+        },
         methods: {
+            initAssets: function(){
+                this.$store.dispatch("setthePostId", this.pid).then(() => {
+                    // this.$store.dispatch("getProduct");
+                    this.$store.dispatch('getEditorCats');
+                });
+            },
             saveIt(){
 
                 console.log("click");

@@ -1,14 +1,18 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import { startCase } from 'lodash';
 Vue.use(Vuex)
 
 let post = window.localStorage.getItem('post');
 let cover = window.localStorage.getItem('cover');
 let images = window.localStorage.getItem('images');
+let cats = window.localStorage.getItem('cats');
+let thePostId = window.localStorage.getItem('thePostId');
 
 export default new Vuex.Store({
     state: {
+        thePostId: 0,
         post: post ? JSON.parse(post) : {
           title: 'novo',
           subtitle: 'subtitle',
@@ -16,12 +20,18 @@ export default new Vuex.Store({
           content: 'content',
           active: 'active',
           block: 0,
+          category_id: 0
       },
       cover: cover ? JSON.parse(cover) : {
         src: '/image/default-cover.png',
         data: ''
       },
       images: images ? JSON.parse(images) : [],
+      cats: cats ? JSON.parse(cats) : [],
+      loadAssets:{
+          post: 0,
+          cats: 0,
+      }
     },
     getters: {
 
@@ -34,7 +44,6 @@ export default new Vuex.Store({
       },
       store_setCover(state, cover){
         console.log("store_setCover");
-
         state.cover = cover;
         // window.localStorage.setItem('cover', JSON.stringify(state.cover));
       },
@@ -45,9 +54,36 @@ export default new Vuex.Store({
 
         state.images = images;
       },
+      store_cats(state, cats){
+
+        console.log(cats);
+        state.cats = cats;
+      },
 
     },
     actions: {
+      async setthePostId({commit}, thePostId){
+        this.state.thePostId = thePostId;
+      },
+      getPost({ commit, dispatch  }) {
+            if(this.state.thePostId != null && this.state.thePostId != 0 && this.state.thePostId != 'init'){
+                axios.get('/editor/get-post/'+this.state.thePostId)
+                .then(function (response) {
+                    // commit('store_product', response.data);
+
+                    // dispatch('getProductImage', response.data.image_id);
+
+                    // dispatch('getProductCategories', response.data.id);
+                    // dispatch('getProductSubCategories', response.data.id);
+                })
+                .catch(function (error) {
+                console.log("DEU ERRO getPost");
+                });
+            }else{
+                // quando se cria um novo produto
+                this.state.loadingAssets.post = 1;
+            }
+      },
       setPost({ commit }, post){
         this.commit('store_setPost', post);
       },
@@ -94,19 +130,6 @@ export default new Vuex.Store({
         return false;
         });
 
-            // axios.post("/editor/post-cover/save", {
-            //     cover: this.state.cover,
-            // })
-            // .then(response => {
-            //     if (response.status != 200) {
-            //     return new Error("Something went wrong");
-            //     }
-            //     return response.data;
-            // })
-            // .catch(function(error) {
-            //     return 401;
-            // });
-
       },
       saveImages({ dispatch, commit }){
 
@@ -116,9 +139,6 @@ export default new Vuex.Store({
 
         let files = this.state.images;
 
-        // this.files.forEach(file => {
-        //     formData.append('images[]', file, file.name);
-        // });
         files.forEach(file => {
             formData.append('images[]', file, file.name);
         });
@@ -130,22 +150,6 @@ export default new Vuex.Store({
                 console.log(error);
                 return false;
                 });
-
-            // axios.post("/editor/post-images/save", {
-            //     images: this.state.images,
-            // })
-            // .then(response => {
-            //     if (response.status != 200) {
-            //     return new Error("Something went wrong");
-            //     }
-
-            //     // dispatch('setCover');
-
-            //     return response.data;
-            // })
-            // .catch(function(error) {
-            //     return 401;
-            // });
 
       },
       save({ dispatch, commit }){
@@ -162,6 +166,29 @@ export default new Vuex.Store({
                 dispatch('saveCover');
 
                 return response.data;
+
+            })
+            .catch(function(error) {
+                return 401;
+            });
+
+
+      },
+      getEditorCats({commit }){
+
+        console.log("getEditorCats");
+
+            axios.get("/editor/get-cats")
+            .then(response => {
+                if (response.status != 200) {
+                    return new Error("Something went wrong");
+                }
+
+                console.log(response.data);
+
+                commit('store_cats', response.data);
+
+                this.state.loadAssets.cats = 1;
 
             })
             .catch(function(error) {

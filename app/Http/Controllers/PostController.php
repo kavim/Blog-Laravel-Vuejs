@@ -221,4 +221,10 @@ class PostController extends Controller
             'status' => true
         ];
     }
+
+    public function getEditorCats()
+    {
+        $PostCategory = \App\PostCategory::where('block', 0)->where('deleted', 0)->where('user_id', auth()->user()->id)->get();
+        return $PostCategory->makeHidden(['created_at', 'updated_at', 'block', 'deleted']);
+    }
 }
