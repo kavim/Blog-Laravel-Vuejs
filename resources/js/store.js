@@ -14,11 +14,13 @@ export default new Vuex.Store({
     state: {
         thePostId: 0,
         post: post ? JSON.parse(post) : {
+          id: 0,
           title: 'novo',
           subtitle: 'subtitle',
           description: 'description',
           content: 'content',
           active: 'active',
+          postcategory: 'postcategory',
           block: 0,
           category_id: 0
       },
@@ -59,6 +61,14 @@ export default new Vuex.Store({
         console.log(cats);
         state.cats = cats;
       },
+      store_post(state, post){
+
+        console.log(cats);
+        state.cats = cats;
+      },
+      store_category(state, cat){
+        state.cats = cats;
+      },
 
     },
     actions: {
@@ -69,12 +79,7 @@ export default new Vuex.Store({
             if(this.state.thePostId != null && this.state.thePostId != 0 && this.state.thePostId != 'init'){
                 axios.get('/editor/get-post/'+this.state.thePostId)
                 .then(function (response) {
-                    // commit('store_product', response.data);
-
-                    // dispatch('getProductImage', response.data.image_id);
-
-                    // dispatch('getProductCategories', response.data.id);
-                    // dispatch('getProductSubCategories', response.data.id);
+                    commit('store_post', response.data);
                 })
                 .catch(function (error) {
                 console.log("DEU ERRO getPost");
@@ -93,87 +98,32 @@ export default new Vuex.Store({
       setImages({ commit }, images){
         this.commit('store_setImages', images);
       },
-      saveCover({ commit }){
-        // this.commit('store_setPost', image);
-        console.log("setCover");
-        console.log(this.state.images);
-
-        const config = {
-            headers: { "content-type": "multipart/form-data" },
-        };
-        const data = new FormData();
-        data.append('images', this.state.cover.data);
-        const json = JSON.stringify({
-            productId: 1
-        });
-
-        data.append('data', json);
-
-        axios.post("/editor/post-cover/save", data, config)
-        .then(response => {
-        console.log(response);
-
-        if (response.status != 200) {
-            return new Error("Something went wrong");
-        }
-
-        if(response.data.status == true){
-            return true;
-        }
-
-        console.log("/editor/post-cover/save");
-
-        })
-        .catch(function(error) {
-        console.log(error);
-
-        return false;
-        });
-
+      setCategory({ commit }, cat){
+        this.commit('store_category', cat);
       },
-      saveImages({ dispatch, commit }){
 
-        console.log("setImages");
+    //   async save({ dispatch, commit }){
 
-        const formData = new FormData();
+    //     console.log("save");
 
-        let files = this.state.images;
+    //         axios.post("/editor/post/save", {post: this.state.post,})
+    //         .then(response => {
+    //             if (response.status != 200) {
+    //             return new Error("Something went wrong");
+    //             }
 
-        files.forEach(file => {
-            formData.append('images[]', file, file.name);
-        });
+    //             dispatch('saveImages');
+    //             dispatch('saveCover');
 
-        axios.post('/editor/post-images/save', formData)
-            .then(response => {
-                console.log(response);
-            }).catch(function(error) {
-                console.log(error);
-                return false;
-                });
+    //             return response.data;
 
-      },
-      save({ dispatch, commit }){
-
-        console.log("save");
-
-            axios.post("/editor/post/save", {post: this.state.post,})
-            .then(response => {
-                if (response.status != 200) {
-                return new Error("Something went wrong");
-                }
-
-                dispatch('saveImages');
-                dispatch('saveCover');
-
-                return response.data;
-
-            })
-            .catch(function(error) {
-                return 401;
-            });
+    //         })
+    //         .catch(function(error) {
+    //             return 401;
+    //         });
 
 
-      },
+    //   },
       getEditorCats({commit }){
 
         console.log("getEditorCats");
@@ -197,7 +147,6 @@ export default new Vuex.Store({
 
 
       },
-
 
     },
 

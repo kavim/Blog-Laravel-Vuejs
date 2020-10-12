@@ -12,6 +12,8 @@ use App\Post;
 use App\PostCategory;
 use App\PostImage;
 
+use Illuminate\Support\Facades\Validator;
+
 class PostController extends Controller
 {
     public function index()
@@ -187,20 +189,90 @@ class PostController extends Controller
 
     public function manager($id = null)
     {
-        return view('Editor.post.manager');
+        $pid = $id ? $id : 0;
+
+        return view('Editor.post.manager', compact('pid'));
     }
 
     public function save(Request $request)
     {
+        sleep(1);
 
         \Log::info($request);
 
-        \Log::info(' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ');
+        // $vali = $request->validate([
+        //     'title' => ['required', 'max:200'],
+        //     // 'subtitle' => ['required', 'max:200'],
+        //     // 'description' => ['required', 'max:200'],
+        //     'postcategory' => ['required'],
+        //     'active' => ['nullable'],
+        // ]);
 
-        return [
-            'status' => true
-        ];
+        // if($vali){
+        //     \Log::info("ok");
+        // }
+
+        $response = array('response' => '', 'status'=>false, 'product_id'=>0);
+
+        $validator = Validator::make($request->post,
+            [
+                'title' => ['required', 'max:200'],
+                // 'subtitle' => ['required', 'max:200'],
+                // 'description' => ['required', 'max:200'],
+                // 'postcategory' => ['required'],
+                'active' => ['nullable'],
+            ]
+
+            );
+            if ($validator->fails()) {
+                $response['response'] = $validator->messages();
+            }else{
+
+                if($request->post['id'] == 0){
+                    $Post = $this->createPost($request->post);
+                    if($Post){
+                        $response['status'] = true;
+                        $response['product_id'] = $Post['id'];
+                    }
+                }else{
+                    $this->updatePost($request->post);
+                }
+
+
+        }
+        return $response;
+
+
+        // return [
+        //     'status' => true
+        // ];
     }
+
+    public function createPost($post)
+    {
+        $Post = Post::create([
+            'title' => $post['title'],
+            'subtitle' => $post['subtitle'],
+            'description' => $post['description'],
+            'content' => $post['content'],
+            'postcategory' => $post['postcategory'],
+            'active' => $post['active'] == 1 ? 1 : 0,
+            'user_id' => auth()->user()->id,
+        ]);
+
+        if($Post){
+            return $Post;
+        }
+
+        return false;
+
+    }
+
+    public function updatePost($post)
+    {
+        \Log::info("to update");
+    }
+
     public function saveCover(Request $request)
     {
 
@@ -225,6 +297,12 @@ class PostController extends Controller
     public function getEditorCats()
     {
         $PostCategory = \App\PostCategory::where('block', 0)->where('deleted', 0)->where('user_id', auth()->user()->id)->get();
+        return $PostCategory->makeHidden(['created_at', 'updated_at', 'block', 'deleted']);
+    }
+
+    public function getPost($id)
+    {
+        $PostCategory = \App\PostCategory::where('deleted', 0)->where('user_id', auth()->user()->id)->get();
         return $PostCategory->makeHidden(['created_at', 'updated_at', 'block', 'deleted']);
     }
 }

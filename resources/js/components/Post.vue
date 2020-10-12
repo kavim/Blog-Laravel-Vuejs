@@ -168,6 +168,9 @@
                 }
 
                 return retorno;
+            },
+            syncCategory(){
+
             }
         },
         watch: {
@@ -176,6 +179,9 @@
                     this.syncdata();
                 },
                 deep: true
+            },
+            selectedCat: function(val){
+                this.syncCategory();
             }
         },
         computed: {
