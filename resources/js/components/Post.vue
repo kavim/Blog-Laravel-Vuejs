@@ -170,7 +170,7 @@
                 return retorno;
             },
             syncCategory(){
-
+                this.post.category_id = this.selectedCat;
             }
         },
         watch: {

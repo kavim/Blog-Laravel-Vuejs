@@ -11,8 +11,9 @@ Route::post('/post/store', 'PostController@store')->name('post.store');
 Route::get('/post/edit/{id}', 'PostController@edit')->name('post.edit');
 Route::put('/post/update/{id}', 'PostController@update')->name('post.update');
 
+Route::get('get-post-by-id/{id}', 'PostController@getPostById');
+
 Route::get('/post/manager/{id?}', 'PostController@manager');
-Route::get('/post/get-post', 'PostController@manager');
 Route::post('/post/save', 'PostController@save');
 Route::post('/post-cover/save', 'PostController@saveCover');
 Route::post('/post-images/save', 'PostController@saveImages');

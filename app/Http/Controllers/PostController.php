@@ -70,7 +70,6 @@ class PostController extends Controller
                 'post_id' => $PostCategory->id
             ]);
 
-            // $image = Imagem::make(storage_path("app/public/".$src))->save();
             $image = Imagem::make(storage_path("app/public/".$src))->fit(1280, 720)->save();
             $image->save();
         }
@@ -187,11 +186,37 @@ class PostController extends Controller
         return redirect()->route('post.index')->with('erromsg', 'erro!');
     }
 
+    public function getPostById($id)
+    {
+
+        $Post = Post::where('id', $id)->where('deleted', 0)->where('user_id', auth()->user()->id)->first();
+
+        \Log::info("getPostById");
+        \Log::info($Post);
+
+        return $Post->makeHidden(['created_at', 'updated_at', 'block', 'deleted']);
+
+    }
+
     public function manager($id = null)
     {
-        $pid = $id ? $id : 0;
+        if(!$id){
+            $pid = 0;
+            return view('Editor.post.manager', compact('pid'));
+        }
 
-        return view('Editor.post.manager', compact('pid'));
+        // $PostId = Post::where('id', $id)->where('deleted', 0)->where('user_id', auth()->user()->id)->firstOrFail('id');
+        $PostId = Post::where('id', $id)->where('deleted', 0)->where('user_id', auth()->user()->id)->first('id');
+
+        if($PostId){
+
+            $pid = $PostId->id;
+
+            return view('Editor.post.manager', compact('pid'));
+        }
+
+        return redirect('editor/post');
+
     }
 
     public function save(Request $request)
@@ -200,18 +225,6 @@ class PostController extends Controller
 
         \Log::info($request);
 
-        // $vali = $request->validate([
-        //     'title' => ['required', 'max:200'],
-        //     // 'subtitle' => ['required', 'max:200'],
-        //     // 'description' => ['required', 'max:200'],
-        //     'postcategory' => ['required'],
-        //     'active' => ['nullable'],
-        // ]);
-
-        // if($vali){
-        //     \Log::info("ok");
-        // }
-
         $response = array('response' => '', 'status'=>false, 'product_id'=>0);
 
         $validator = Validator::make($request->post,
@@ -219,7 +232,7 @@ class PostController extends Controller
                 'title' => ['required', 'max:200'],
                 // 'subtitle' => ['required', 'max:200'],
                 // 'description' => ['required', 'max:200'],
-                // 'postcategory' => ['required'],
+                'category_id' => ['required', 'min:1'],
                 'active' => ['nullable'],
             ]
 
@@ -241,11 +254,6 @@ class PostController extends Controller
 
         }
         return $response;
-
-
-        // return [
-        //     'status' => true
-        // ];
     }
 
     public function createPost($post)
@@ -255,7 +263,7 @@ class PostController extends Controller
             'subtitle' => $post['subtitle'],
             'description' => $post['description'],
             'content' => $post['content'],
-            'postcategory' => $post['postcategory'],
+            'category_id' => $post['category_id'],
             'active' => $post['active'] == 1 ? 1 : 0,
             'user_id' => auth()->user()->id,
         ]);
@@ -277,7 +285,27 @@ class PostController extends Controller
     {
 
         \Log::info($request);
-        \Log::info(' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ');
+
+        $request['data'] = json_decode($request['data']);
+
+        $product_id = $request['data']->productId;
+
+        $this->validate($request, ['cover' => 'image|max:20480',]);
+
+        if($request->hasFile('cover')) {
+            $src = $request->file('cover')->store("post/image/" . Carbon::now()->format('Y-m-d'), 'public');
+            $img = PostImage::create([
+                'name' => 'name',
+                'caption' => 'caption',
+                'cover' => 1,
+                'src' => $src,
+                'post_id' => $product_id
+            ]);
+
+            // $image = Imagem::make(storage_path("app/public/".$src))->save();
+            $image = Imagem::make(storage_path("app/public/".$src))->fit(1280, 720)->save();
+            $image->save();
+        }
 
         return [
             'status' => true
@@ -297,12 +325,6 @@ class PostController extends Controller
     public function getEditorCats()
     {
         $PostCategory = \App\PostCategory::where('block', 0)->where('deleted', 0)->where('user_id', auth()->user()->id)->get();
-        return $PostCategory->makeHidden(['created_at', 'updated_at', 'block', 'deleted']);
-    }
-
-    public function getPost($id)
-    {
-        $PostCategory = \App\PostCategory::where('deleted', 0)->where('user_id', auth()->user()->id)->get();
         return $PostCategory->makeHidden(['created_at', 'updated_at', 'block', 'deleted']);
     }
 }

@@ -2334,7 +2334,9 @@ __webpack_require__.r(__webpack_exports__);
 
       return retorno;
     },
-    syncCategory: function syncCategory() {}
+    syncCategory: function syncCategory() {
+      this.post.category_id = this.selectedCat;
+    }
   },
   watch: {
     post: {
@@ -2418,8 +2420,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['pid'],
+  name: "PostManager",
+  props: {
+    pid: {
+      type: Number
+    }
+  },
   mounted: function mounted() {
     console.log('Component mounted.');
   },
@@ -2433,13 +2445,12 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$store.dispatch("setthePostId", this.pid).then(function () {
-        _this.$store.dispatch("getProduct");
+        _this.$store.dispatch("getPost");
 
         _this.$store.dispatch('getEditorCats');
       });
     },
     saveIt: function saveIt() {
-      console.log("click");
       this.$store.dispatch('save');
     },
     formSubmit: function formSubmit(e) {
@@ -2463,10 +2474,15 @@ __webpack_require__.r(__webpack_exports__);
           }).then(function (response) {
             if (response.status != 200) {
               return new Error("Something went wrong");
+            }
+
+            if (response.data.status != true) {
+              return response.data;
             } // dispatch('saveImages');
             // dispatch('saveCover');
-            // this.saveCover();
-            // this.saveImages();
+
+
+            _this2.saveCover(response.data.product_id); // this.saveImages();
 
 
             return response.data;
@@ -2528,21 +2544,19 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    saveCover: function saveCover() {
+    saveCover: function saveCover(pid) {
       var config = {
         headers: {
           "content-type": "multipart/form-data"
         }
       };
       var data = new FormData();
-      data.append('images', this.$store.state.cover.data);
+      data.append('cover', this.$store.state.cover.data);
       var json = JSON.stringify({
-        productId: 1
+        productId: pid
       });
       data.append('data', json);
       axios.post("/editor/post-cover/save", data, config).then(function (response) {
-        console.log(response);
-
         if (response.status != 200) {
           return new Error("Something went wrong");
         }
@@ -2550,10 +2564,7 @@ __webpack_require__.r(__webpack_exports__);
         if (response.data.status == true) {
           return true;
         }
-
-        console.log("/editor/post-cover/save");
       })["catch"](function (error) {
-        console.log(error);
         return false;
       });
     },
@@ -43288,7 +43299,8 @@ var render = function() {
             _vm._v("Example Component")
           ]),
           _vm._v(" "),
-          this.$store.state.loadAssets.cats == 1
+          this.$store.state.loadAssets.cats == 1 &&
+          this.$store.state.loadAssets.post == 1
             ? _c(
                 "div",
                 { staticClass: "card-body" },
@@ -43314,13 +43326,26 @@ var render = function() {
                 ],
                 1
               )
-            : _vm._e()
+            : _c("div", { staticClass: "d-flex justify-content-center" }, [
+                _vm._m(0)
+              ])
         ])
       ])
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "spinner-border", attrs: { role: "status" } },
+      [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -57329,7 +57354,6 @@ var thePostId = window.localStorage.getItem('thePostId');
       description: 'description',
       content: 'content',
       active: 'active',
-      postcategory: 'postcategory',
       block: 0,
       category_id: 0
     },
@@ -57347,28 +57371,20 @@ var thePostId = window.localStorage.getItem('thePostId');
   getters: {},
   mutations: {
     store_setPost: function store_setPost(state, post) {
-      console.log("store_setPost");
       state.post = post;
     },
     store_setCover: function store_setCover(state, cover) {
-      console.log("store_setCover");
       state.cover = cover; // window.localStorage.setItem('cover', JSON.stringify(state.cover));
     },
     store_setImages: function store_setImages(state, images) {
-      console.log("store_setImages");
-      console.log(images);
       state.images = images;
     },
     store_cats: function store_cats(state, cats) {
-      console.log(cats);
       state.cats = cats;
     },
     store_post: function store_post(state, post) {
-      console.log(cats);
-      state.cats = cats;
-    },
-    store_category: function store_category(state, cat) {
-      state.cats = cats;
+      state.post = post;
+      state.loadAssets.post = 1;
     }
   },
   actions: {
@@ -57382,9 +57398,11 @@ var thePostId = window.localStorage.getItem('thePostId');
             switch (_context.prev = _context.next) {
               case 0:
                 commit = _ref.commit;
+                console.log("setthePostId");
+                console.log(thePostId);
                 _this.state.thePostId = thePostId;
 
-              case 2:
+              case 4:
               case "end":
                 return _context.stop();
             }
@@ -57397,14 +57415,17 @@ var thePostId = window.localStorage.getItem('thePostId');
           dispatch = _ref2.dispatch;
 
       if (this.state.thePostId != null && this.state.thePostId != 0 && this.state.thePostId != 'init') {
-        axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/editor/get-post/' + this.state.thePostId).then(function (response) {
-          commit('store_post', response.data);
+        axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/editor/get-post-by-id/' + this.state.thePostId).then(function (response) {
+          console.log(response);
+          commit('store_post', response.data); // this.state.post = response.data;
+          // this.state.loadAssets.post = 1;
         })["catch"](function (error) {
+          console.log(error);
           console.log("DEU ERRO getPost");
         });
       } else {
         // quando se cria um novo produto
-        this.state.loadingAssets.post = 1;
+        this.state.loadAssets.post = 1;
       }
     },
     setPost: function setPost(_ref3, post) {
@@ -57423,32 +57444,17 @@ var thePostId = window.localStorage.getItem('thePostId');
       var commit = _ref6.commit;
       this.commit('store_category', cat);
     },
-    //   async save({ dispatch, commit }){
-    //     console.log("save");
-    //         axios.post("/editor/post/save", {post: this.state.post,})
-    //         .then(response => {
-    //             if (response.status != 200) {
-    //             return new Error("Something went wrong");
-    //             }
-    //             dispatch('saveImages');
-    //             dispatch('saveCover');
-    //             return response.data;
-    //         })
-    //         .catch(function(error) {
-    //             return 401;
-    //         });
-    //   },
     getEditorCats: function getEditorCats(_ref7) {
       var _this2 = this;
 
       var commit = _ref7.commit;
-      console.log("getEditorCats");
+      // console.log("getEditorCats");
       axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/editor/get-cats").then(function (response) {
         if (response.status != 200) {
           return new Error("Something went wrong");
-        }
+        } // console.log(response.data);
 
-        console.log(response.data);
+
         commit('store_cats', response.data);
         _this2.state.loadAssets.cats = 1;
       })["catch"](function (error) {

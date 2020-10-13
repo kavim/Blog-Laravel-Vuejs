@@ -2,6 +2,6 @@
 
 @section('content')
 
-<post-manager pid='{{ $pid }}'></post-manager>
+<post-manager :pid='{{ $pid }}'></post-manager>
 
 @endsection

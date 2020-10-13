@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header">Example Component</div>
 
-                    <div class="card-body" v-if="this.$store.state.loadAssets.cats == 1">
+                    <div class="card-body" v-if="this.$store.state.loadAssets.cats == 1 && this.$store.state.loadAssets.post == 1">
 
                         <cover></cover>
 
@@ -20,6 +20,11 @@
                         <button @click="formSubmit" class="btn btn-success btn-block">Salvar</button>
 
                     </div>
+                    <div v-else class="d-flex justify-content-center">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -28,7 +33,12 @@
 
 <script>
     export default {
-        props: ['pid'],
+        name: "PostManager",
+        props: {
+            pid: {
+                type: Number,
+            },
+        },
         mounted() {
             console.log('Component mounted.')
         },
@@ -44,15 +54,14 @@
         methods: {
             initAssets: function(){
                 this.$store.dispatch("setthePostId", this.pid).then(() => {
-                    this.$store.dispatch("getProduct");
+                    this.$store.dispatch("getPost");
                     this.$store.dispatch('getEditorCats');
                 });
             },
             saveIt(){
 
-                console.log("click");
-
                 this.$store.dispatch('save');
+
             },
             formSubmit(e){
                 if(e){
@@ -78,10 +87,14 @@
                                     return new Error("Something went wrong");
                                 }
 
+                                if (response.data.status != true) {
+                                    return response.data;
+                                }
+
                                 // dispatch('saveImages');
                                 // dispatch('saveCover');
 
-                                // this.saveCover();
+                                this.saveCover(response.data.product_id);
                                 // this.saveImages();
 
                                 return response.data;
@@ -151,39 +164,34 @@
                     console.log(error);
                 });
             },
-            saveCover(){
+            saveCover(pid){
 
                 const config = {
                     headers: { "content-type": "multipart/form-data" },
                 };
                 const data = new FormData();
-                data.append('images', this.$store.state.cover.data);
+                data.append('cover', this.$store.state.cover.data);
                 const json = JSON.stringify({
-                    productId: 1
+                    productId: pid
                 });
 
                 data.append('data', json);
 
                 axios.post("/editor/post-cover/save", data, config)
                     .then(response => {
-                    console.log(response);
 
-                    if (response.status != 200) {
-                        return new Error("Something went wrong");
-                    }
+                        if (response.status != 200) {
+                            return new Error("Something went wrong");
+                        }
 
-                    if(response.data.status == true){
-                        return true;
-                    }
-
-                    console.log("/editor/post-cover/save");
+                        if(response.data.status == true){
+                            return true;
+                        }
 
                     })
                     .catch(function(error) {
-                    console.log(error);
-
-                    return false;
-                });
+                        return false;
+                    });
 
             },
             saveImages(){
