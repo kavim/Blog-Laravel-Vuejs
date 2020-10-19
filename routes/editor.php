@@ -12,6 +12,9 @@ Route::get('/post/edit/{id}', 'PostController@edit')->name('post.edit');
 Route::put('/post/update/{id}', 'PostController@update')->name('post.update');
 
 Route::get('get-post-by-id/{id}', 'PostController@getPostById');
+Route::get('get-post-cover/{id}', 'PostController@getPostCover');
+Route::get('get-post-images/{id}', 'PostController@getPostImages');
+Route::get('get-post-videos/{id}', 'PostController@getPostVideos');
 
 Route::get('/post/manager/{id?}', 'PostController@manager');
 Route::post('/post/save', 'PostController@save');

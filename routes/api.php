@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/get-posts', 'SpaController@getPosts');
+Route::get('/get-post/{id}', 'SpaController@getPost');

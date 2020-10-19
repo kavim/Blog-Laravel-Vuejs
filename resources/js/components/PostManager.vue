@@ -1,34 +1,36 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 bg-dark">
-                <div class="card">
-                    <div class="card-header">Example Component</div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tile">
+        <div class="tile-body">
 
-                    <div class="card-body" v-if="this.$store.state.loadAssets.cats == 1 && this.$store.state.loadAssets.post == 1">
+            <div v-if="this.$store.state.loadAssets.cats == 1 && this.$store.state.loadAssets.post == 1 && this.$store.state.loadAssets.cover == 1 && this.$store.state.loadAssets.videos == 1 && this.$store.state.loadAssets.images == 1">
+                <cover></cover>
 
-                        <cover></cover>
+                <post></post>
 
-                        <post></post>
+                <hr>
+                <strong>Para adicionar novas imagens</strong>
+                <images></images>
 
-                        <hr>
+                <hr>
 
-                        <images></images>
+                <prev-images></prev-images>
 
-                        <hr>
+                <hr>
 
-                        <button @click="formSubmit" class="btn btn-success btn-block">Salvar</button>
-
-                    </div>
-                    <div v-else class="d-flex justify-content-center">
-                        <div class="spinner-border" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
+                <button @click="formSubmit" class="btn btn-success btn-block">Salvar</button>
+            </div>
+            <div v-else class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
                 </div>
             </div>
+
         </div>
+      </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -81,6 +83,8 @@
 
                        return axios.post("/editor/post/save", {
                                 post: this.$store.state.post,
+                                videos: this.$store.state.videos,
+                                imagesToDelete: this.$store.state.imagesToDelete
                             })
                             .then(response => {
                                 if (response.status != 200) {
@@ -95,7 +99,7 @@
                                 // dispatch('saveCover');
 
                                 this.saveCover(response.data.product_id);
-                                // this.saveImages();
+                                this.saveImages(response.data.product_id);
 
                                 return response.data;
 
@@ -132,7 +136,7 @@
                         title: "Oops...",
                         html:
                             '<i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;<b>' +
-                            result +
+                            result.data.response +
                             "</b>",
                         text: "Alguma coisa deu errado!",
                         timer: 4000,
@@ -154,7 +158,10 @@
                             showConfirmButton: false // There won't be any confirm button
                         })
                         .then(function() {
-                            console.log('ok');
+                            // window.location =
+                            // "/editor/post/manager/" + result.value.product_id;
+
+                            console.log('thatIsOk');
                         });
                     }
                     }
@@ -166,37 +173,41 @@
             },
             saveCover(pid){
 
-                const config = {
-                    headers: { "content-type": "multipart/form-data" },
-                };
-                const data = new FormData();
-                data.append('cover', this.$store.state.cover.data);
-                const json = JSON.stringify({
-                    productId: pid
-                });
-
-                data.append('data', json);
-
-                axios.post("/editor/post-cover/save", data, config)
-                    .then(response => {
-
-                        if (response.status != 200) {
-                            return new Error("Something went wrong");
-                        }
-
-                        if(response.data.status == true){
-                            return true;
-                        }
-
-                    })
-                    .catch(function(error) {
-                        return false;
+                if(this.$store.state.cover.update && this.$store.state.cover.update == 1){
+                    const config = {
+                        headers: { "content-type": "multipart/form-data" },
+                    };
+                    const data = new FormData();
+                    data.append('cover', this.$store.state.cover.data);
+                    const json = JSON.stringify({
+                        productId: pid
                     });
 
-            },
-            saveImages(){
+                    data.append('data', json);
 
-                console.log("setImages");
+                    axios.post("/editor/post-cover/save", data, config)
+                        .then(response => {
+
+                            if (response.status != 200) {
+                                return new Error("Something went wrong");
+                            }
+
+                            if(response.data.status == true){
+                                return true;
+                            }
+
+                        })
+                        .catch(function(error) {
+                            console.log("error no saveCover");
+                            console.log(error);
+                            return false;
+                        });
+                }
+
+                return true;
+
+            },
+            saveImages(pid){
 
                 const formData = new FormData();
 
@@ -206,13 +217,20 @@
                     formData.append('images[]', file, file.name);
                 });
 
+                const json = JSON.stringify({
+                    postId: pid
+                });
+
+                formData.append('data', json);
+
                 axios.post('/editor/post-images/save', formData)
                     .then(response => {
                         console.log(response);
                     }).catch(function(error) {
+                        console.log("error no saveImages");
                         console.log(error);
                         return false;
-                        });
+                    });
 
             },
         }

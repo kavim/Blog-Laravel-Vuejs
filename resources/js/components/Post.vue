@@ -1,7 +1,17 @@
 <template>
     <div class="row my-4">
 
-        {{ this.post }}
+        <!-- {{ this.post }} -->
+
+        <div style="width: 110px" class="d-flex justify-content-between">
+            <span class="pt-1">publicar:</span>
+            <div class="toggle lg">
+                <label>
+                    <input type="checkbox" v-model="post.active" value="1">
+                    <span class="button-indecator"></span>
+                </label>
+            </div>
+        </div>
 
         <div class="col-12">
 
@@ -20,7 +30,7 @@
         </div>
 
         <div class="col-12">
-            {{ cats }}
+            <!-- {{ cats }} -->
 
             <hr>
 
@@ -59,14 +69,14 @@
 
             <div class="input-group mb-3">
                 <label for="videoToAdd" class="sr-only">Password</label>
-                <input v-model="videoToAdd.link" type="text" class="form-control col-12" id="videoToAdd" aria-label="Recipient's videoToAdd" aria-describedby="basic-videoToAdd">
+                <input v-model="videoToAdd.link" type="text" class="form-control col-12" id="videoToAdd" aria-label="Recipient's videoToAdd" aria-describedby="basic-videoToAdd" placeholder="ex: https://youtu.be/H5CJpZGlmFU?list=RDCUdw-urZ3zg">
 
                 <div class="input-group-append">
                     <button @click="addVideo()" type="button" class="btn btn-outline-primary" :disabled="addVideoIsDisabled">Adicionar</button>
                 </div>
             </div>
             <div v-for="(video, index) in videos" :key="index">
-                {{ video }}
+                <!-- {{ video }} -->
                 <div class="card" style="width: 100%">
 
                     <div v-html="embData(video.link)"></div>
@@ -94,7 +104,7 @@
                     title: '',
                     link: ''
                 },
-                videos: [],
+                videos: this.$store.state.videos,
                 editor: ClassicEditor,
                 editorData: "",
                 editorConfig: {
@@ -117,6 +127,9 @@
         methods: {
             syncdata() {
                 this.$store.dispatch("setPost", this.post);
+            },
+            syncVideos() {
+                this.$store.dispatch("setVideos", this.videos);
             },
             addVideo(){
                 this.videos.push(
@@ -177,6 +190,12 @@
             post: {
                 handler: function(val) {
                     this.syncdata();
+                },
+                deep: true
+            },
+            videos: {
+                handler: function(val) {
+                    this.syncVideos();
                 },
                 deep: true
             },

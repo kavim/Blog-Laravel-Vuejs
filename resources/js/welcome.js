@@ -15,7 +15,7 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 
 import VueRouter from 'vue-router'
@@ -23,6 +23,7 @@ Vue.use(VueRouter)
 
 import Home from './components/blog/Home.vue'
 import About from './components/blog/About.vue'
+import Post from './components/blog/Post.vue'
 
 const router = new VueRouter({
     mode: 'history',
@@ -36,6 +37,11 @@ const router = new VueRouter({
             path: '/sobre',
             name: 'sobre',
             component: About,
+        },
+        {
+            path: '/post/:id',
+            name: 'post',
+            component: Post,
         },
     ],
 });

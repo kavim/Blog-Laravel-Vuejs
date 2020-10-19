@@ -7,7 +7,9 @@ Vue.use(Vuex)
 let post = window.localStorage.getItem('post');
 let cover = window.localStorage.getItem('cover');
 let images = window.localStorage.getItem('images');
+let prevImages = window.localStorage.getItem('prevImages');
 let cats = window.localStorage.getItem('cats');
+let videos = window.localStorage.getItem('videos');
 let thePostId = window.localStorage.getItem('thePostId');
 
 export default new Vuex.Store({
@@ -19,7 +21,7 @@ export default new Vuex.Store({
           subtitle: 'subtitle',
           description: 'description',
           content: 'content',
-          active: 'active',
+          active: 1,
           block: 0,
           category_id: 0
       },
@@ -28,10 +30,16 @@ export default new Vuex.Store({
         data: ''
       },
       images: images ? JSON.parse(images) : [],
+      prevImages: prevImages ? JSON.parse(prevImages) : [],
+      imagesToDelete: '',
       cats: cats ? JSON.parse(cats) : [],
+      videos: videos ? JSON.parse(videos) : [],
       loadAssets:{
           post: 0,
           cats: 0,
+          cover: 0,
+          videos: 0,
+          images: 0
       }
     },
     getters: {
@@ -55,6 +63,20 @@ export default new Vuex.Store({
         state.post = post;
         state.loadAssets.post = 1;
       },
+      store_videos(state, videos){
+          console.log("store_videosstore_v");
+        state.videos = videos;
+      },
+      store_cover(state, src){
+        state.cover.src = src;
+        state.loadAssets.cover = 1;
+      },
+      store_images(state, images){
+        state.images = images;
+      },
+      store_Previmages(state, images){
+        state.prevImages = images;
+      },
     },
     actions: {
       async setthePostId({commit}, thePostId){
@@ -76,6 +98,9 @@ export default new Vuex.Store({
 
                     // this.state.loadAssets.post = 1;
 
+                    dispatch('getCover');
+                    dispatch('getVideos');
+                    dispatch('getImages');
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -84,6 +109,9 @@ export default new Vuex.Store({
             }else{
                 // quando se cria um novo produto
                 this.state.loadAssets.post = 1;
+                this.state.loadAssets.cover = 1;
+                this.state.loadAssets.videos = 1;
+                this.state.loadAssets.images = 1;
             }
       },
       setPost({ commit }, post){
@@ -97,6 +125,17 @@ export default new Vuex.Store({
       },
       setCategory({ commit }, cat){
         this.commit('store_category', cat);
+      },
+      setVideos({ commit }, videos){
+        this.commit('store_videos', videos);
+      },
+      setImagesToDelete({ commit }, images){
+
+        console.log("setImagesToDelete");
+        console.log(images);
+
+        this.state.imagesToDelete = images;
+
       },
       getEditorCats({commit }){
 
@@ -120,6 +159,79 @@ export default new Vuex.Store({
             });
 
 
+      },
+      getCover({ commit }){
+
+        console.log("getCover");
+        console.log(this.state.thePostId);
+
+        axios.get("/editor/get-post-cover/"+this.state.thePostId)
+        .then(response => {
+
+            if (response.status != 200) {
+                return new Error("Something went wrong");
+            }
+            if(response.data.status){
+                commit('store_cover', response.data.src);
+            }else{
+                this.state.loadAssets.cover = 1;
+            }
+
+        })
+        .catch(function(error) {
+            console.log("error getCover");
+            console.log(error);
+        });
+      },
+      getImages({ commit }){
+
+        console.log("getImages");
+
+        axios.get("/editor/get-post-images/"+this.state.thePostId)
+        .then(response => {
+
+            if (response.status != 200) {
+                return new Error("Something went wrong");
+            }
+            if(response.data.status){
+                this.state.loadAssets.images = 1;
+                commit('store_Previmages', response.data.images);
+
+            }
+            console.log("vou fazer o coisa aqui");
+            this.state.loadAssets.images = 1;
+
+        })
+        .catch(function(error) {
+            console.log("error getCover");
+            console.log(error);
+        }).finally(() => {
+            this.state.loadAssets.images = 1;
+        });
+
+        console.log("vou fazer o coisa aqui");
+
+      },
+      getVideos({ commit }){
+
+        axios.get("/editor/get-post-videos/"+this.state.thePostId)
+        .then(response => {
+
+            if (response.status != 200) {
+                return new Error("Something went wrong");
+            }
+            if(response.data.status){
+                commit('store_videos', response.data.videos);
+                this.state.loadAssets.videos = 1;
+            }else{
+                this.state.loadAssets.videos = 1;
+            }
+
+        })
+        .catch(function(error) {
+            console.log("error getCover");
+            console.log(error);
+        });
       },
 
     },

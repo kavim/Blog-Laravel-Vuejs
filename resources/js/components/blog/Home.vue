@@ -1,5 +1,8 @@
 <template>
     <div class="container">
+        <div>
+            os post
+        </div>
         <div v-if="loadingPosts">
             <div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">
@@ -31,6 +34,7 @@ export default {
         }
     },
     created: function() {
+        console.log('olhaLá');
         this.getPosts();
     },
     methods:{

@@ -44,6 +44,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 Vue.component('post-manager', require('./components/PostManager.vue').default);
 Vue.component('images', require('./components/Images.vue').default);
+Vue.component('prev-images', require('./components/prevImages.vue').default);
 Vue.component('post', require('./components/Post.vue').default);
 Vue.component('cover', require('./components/Cover.vue').default);
 

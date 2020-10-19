@@ -29,7 +29,7 @@
             <div class="row">
                 <div class="col-12 d-flex justify-content-between py-2">
                     <b>POST</b>
-                    <a class="btn btn-success" href="{{ route('post.create') }}">Criar</a>
+                    <a class="btn btn-success" href="/editor/post/manager/">Criar</a>
                 </div>
             </div>
             <table class="table">
@@ -49,7 +49,8 @@
                             <td><img src="{{ $post->getCover($post->id) }}" width="100" alt=""></td>
                             <td>{{ $post->title }}</td>
                             <td>{{ $post->subtitle }}</td>
-                            <td><a href="/editor/post/edit/{{ $post->id }}" >Editar</a></td>
+                            {{-- <td><a href="/editor/post/edit/{{ $post->id }}" >Editar</a></td> --}}
+                            <td><a href="/editor/post/manager/{{ $post->id }}" >Editar</a></td>
                         </tr>
                     @endforeach
                 </tbody>

@@ -7,30 +7,31 @@
         :class="{ dragging: isDragging }">
 
         <div class="upload-control" v-show="images.length">
-            <label for="file">Select a file</label>
-            <button @click="upload">Upload</button>
+            <label for="file">Selecionar Imagem</label>
+            <!-- <button @click="upload">Upload</button> -->
         </div>
-
 
         <div v-show="!images.length">
             <i class="fa fa-cloud-upload"></i>
-            <p>Drag your images here</p>
-            <div>OR</div>
+            <p>Arraste suas imagens aqui!</p>
+            <div>Ou</div>
             <div class="file-input">
-                <label for="file">Select a file</label>
+                <label for="file">Selecionar</label>
                 <input type="file" id="file" @change="onInputChange" multiple>
             </div>
         </div>
 
         <div class="images-preview" v-show="images.length">
-            <div class="img-wrapper" v-for="(image, index) in images" :key="index">
-                <img :src="image" :alt="`Image Uplaoder ${index}`">
+            <div class="a" v-for="(image, index) in images" :key="index">
+                <button @click="remove(index)" class="x">x</button>
+                <img width="160" :src="image" :alt="`Image Uplaoder ${index}`">
                 <div class="details">
-                    <span class="name" v-text="files[index].name"></span>
+                    <span>index: {{index}}</span>
                     <span class="size" v-text="getFileSize(files[index].size)"></span>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -43,6 +44,7 @@ export default {
         images: []
     }),
     methods: {
+
         OnDragEnter(e) {
             e.preventDefault();
 
@@ -50,6 +52,14 @@ export default {
             this.isDragging = true;
 
             return false;
+        },
+        remove(index){
+
+            this.files.splice(index, 1);
+            this.images.splice(index, 1);
+
+            this.syncdata();
+
         },
         OnDragLeave(e) {
             e.preventDefault();
@@ -111,7 +121,7 @@ export default {
 
             axios.post('/images-upload', formData)
                 .then(response => {
-                    this.$toastr.s('All images uplaoded successfully');
+                    // this.$toastr.s('All images uplaoded successfully');
                     this.images = [];
                     this.files = [];
                 })
@@ -124,9 +134,40 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.a {
+  width: 160px;
+  overflow: visible;
+  position: relative;
+  background-color: #fff;
+  margin: 10px;
+}
+
+.x {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.555);
+    border: 1px solid black;
+    color: white;
+    border-radius: 50px;
+    top: -10px;
+    right: -10px;
+    padding: 0px;
+    font-size: 12px;
+}
+
+.btn-circle.btn-sm {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    font-size: 8px;
+    text-align: center;
+}
 .uploader {
     width: 100%;
-    background: #2196F3;
+    background: #527fa5;
     color: #fff;
     padding: 40px 15px;
     text-align: center;
@@ -191,6 +232,8 @@ export default {
             background: #fff;
             box-shadow: 5px 5px 20px #3e3737;
 
+            margin-left: 20px;
+
             img {
                 max-height: 105px;
             }
@@ -225,7 +268,8 @@ export default {
         text-align: right;
 
         button, label {
-            background: #2196F3;
+            // background: #2196F3;
+            background: #406685;
             border: 2px solid #03A9F4;
             border-radius: 3px;
             color: #fff;

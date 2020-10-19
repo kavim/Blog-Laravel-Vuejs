@@ -191,8 +191,8 @@ class PostController extends Controller
 
         $Post = Post::where('id', $id)->where('deleted', 0)->where('user_id', auth()->user()->id)->first();
 
-        \Log::info("getPostById");
-        \Log::info($Post);
+        // \Log::info("getPostById");
+        // \Log::info($Post);
 
         return $Post->makeHidden(['created_at', 'updated_at', 'block', 'deleted']);
 
@@ -225,7 +225,7 @@ class PostController extends Controller
 
         \Log::info($request);
 
-        $response = array('response' => '', 'status'=>false, 'product_id'=>0);
+        $response = array('response' => 'Erro', 'status'=>false, 'product_id'=>0);
 
         $validator = Validator::make($request->post,
             [
@@ -242,18 +242,56 @@ class PostController extends Controller
             }else{
 
                 if($request->post['id'] == 0){
+
                     $Post = $this->createPost($request->post);
+
                     if($Post){
                         $response['status'] = true;
                         $response['product_id'] = $Post['id'];
+                        $response['response'] = 'created';
+
+                        $this->storeVideos($request->videos, $Post['id']);
                     }
+
                 }else{
-                    $this->updatePost($request->post);
+
+                    $PostId = $this->updatePost($request->post);
+
+                    if($PostId){
+                        $response['status'] = true;
+                        $response['product_id'] = $PostId;
+                        $response['response'] = 'updated';
+
+                        $this->updateVideos($request->videos, $PostId);
+
+                        $this->imagesToDelete($request->imagesToDelete, $PostId);
+
+                    }
+
                 }
 
 
         }
         return $response;
+    }
+
+    public function imagesToDelete($imagesToDelete, $pid)
+    {
+
+        \Log::info('imagesToDelete');
+        \Log::info($imagesToDelete);
+        \Log::info($pid);
+
+
+        if(!$imagesToDelete){
+            return true;
+        }
+
+        foreach ($imagesToDelete as $value) {
+
+            \App\PostImage::where('post_id', $pid)->where('id', $value)->delete();
+
+        }
     }
 
     public function createPost($post)
@@ -264,7 +302,7 @@ class PostController extends Controller
             'description' => $post['description'],
             'content' => $post['content'],
             'category_id' => $post['category_id'],
-            'active' => $post['active'] == 1 ? 1 : 0,
+            'active' => $post['active'] == 1 || $post['active'] ? 1 : 0,
             'user_id' => auth()->user()->id,
         ]);
 
@@ -276,9 +314,58 @@ class PostController extends Controller
 
     }
 
+    public function storeVideos($videos, $pid)
+    {
+        \Log::info('storeVideos');
+
+        if(count($videos) > 0){
+            foreach ($videos as $key => $video) {
+
+                \App\PostVideo::create([
+                    'src' => $video['link'],
+                    'post_id' => $pid
+                ]);
+
+            }
+        }
+
+    }
+    public function updateVideos($videos, $pid)
+    {
+        \App\PostVideo::where('post_id', $pid)->delete();
+
+        if(count($videos) > 0){
+            foreach ($videos as $key => $video) {
+
+                \App\PostVideo::create([
+                    'src' => $video['link'],
+                    'post_id' => $pid
+                ]);
+
+            }
+        }
+
+    }
+
     public function updatePost($post)
     {
-        \Log::info("to update");
+
+        $Post = Post::find($post['id']);
+
+        $ok = $Post->update([
+            'title' => $post['title'],
+            'subtitle' => $post['subtitle'],
+            'description' => $post['description'],
+            'content' => $post['content'],
+            'category_id' => $post['category_id'],
+            'active' => $post['active'] == 1 || $post['active'] ? 1 : 0,
+        ]);
+
+        if($ok){
+            return $Post->id;
+        }
+
+        return false;
     }
 
     public function saveCover(Request $request)
@@ -294,7 +381,7 @@ class PostController extends Controller
 
         if($request->hasFile('cover')) {
             $src = $request->file('cover')->store("post/image/" . Carbon::now()->format('Y-m-d'), 'public');
-            $img = PostImage::create([
+            $img = \App\PostImage::create([
                 'name' => 'name',
                 'caption' => 'caption',
                 'cover' => 1,
@@ -313,9 +400,35 @@ class PostController extends Controller
     }
     public function saveImages(Request $request)
     {
-
         \Log::info($request);
-        \Log::info(' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ');
+
+        $request['data'] = json_decode($request['data']);
+
+        $postId = $request['data']->postId;
+
+        // \App\PostImage::where('post_id', $postId)->where('cover', 0)->delete();
+
+        // $this->validate($request, ['cover' => 'image|max:20480',]);
+
+        if($request->hasFile('images')) {
+
+
+            foreach ($request->file('images') as $key => $value) {
+
+                $src = $value->store("post/image/" . Carbon::now()->format('Y-m-d').rand(1,9999), 'public');
+
+                $img = PostImage::create([
+                    'name' => 'name'.rand(1,99999),
+                    'caption' => 'caption',
+                    'cover' => 0,
+                    'src' => $src,
+                    'post_id' => $postId
+                ]);
+
+                $image = Imagem::make(storage_path("app/public/".$src))->save();
+                $image->save();
+            }
+        }
 
         return [
             'status' => true
@@ -326,5 +439,76 @@ class PostController extends Controller
     {
         $PostCategory = \App\PostCategory::where('block', 0)->where('deleted', 0)->where('user_id', auth()->user()->id)->get();
         return $PostCategory->makeHidden(['created_at', 'updated_at', 'block', 'deleted']);
+    }
+
+    public function getPostCover($id)
+    {
+        $return = [
+            'status' => false,
+            'src'    => '/'
+        ];
+
+        $coverSrc = PostImage::where('post_id', $id)->where('cover', 1)->latest()->first();
+
+        if($coverSrc){
+            $return['src'] = '/storage/'.$coverSrc->src;
+            $return['status'] = true;
+        }
+
+        return $return;
+    }
+
+    public function getPostImages($id)
+    {
+        \Log::info('getting post imagens');
+
+        $return = [
+            'status' => false,
+            'images'    => []
+        ];
+
+        $images = array();
+
+        $theimages = PostImage::where('post_id', $id)->where('cover', 0)->get();
+
+        foreach ($theimages as $key => $i) {
+            array_push($images, [
+                'id' => $i->id,
+                'src' => '/storage/'.$i->src
+            ]);
+        }
+
+        $return['images'] = $images;
+        $return['status'] = true;
+
+        \Log::info($return);
+
+        return $return;
+    }
+
+    public function getPostVideos($id)
+    {
+        $videos = array();
+        $return = [
+            'status' => false,
+            'videos'    => []
+        ];
+
+        $PostVideos = \App\PostVideo::where('post_id', $id)->get();
+
+        foreach ($PostVideos as $key => $v) {
+
+            array_push($videos, [
+                'title' => $v->name,
+                'link' => $v->src
+            ]);
+        }
+
+        if($PostVideos){
+            $return['videos'] = $videos;
+            $return['status'] = true;
+        }
+
+        return $return;
     }
 }
