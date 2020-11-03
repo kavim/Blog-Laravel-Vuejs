@@ -4,7 +4,7 @@
       <div class="tile">
         <div class="tile-body">
 
-            <div v-if="this.$store.state.loadAssets.cats == 1 && this.$store.state.loadAssets.post == 1 && this.$store.state.loadAssets.cover == 1 && this.$store.state.loadAssets.videos == 1 && this.$store.state.loadAssets.images == 1">
+            <div class="col-12 col-md-10 mx-auto" v-if="this.$store.state.loadAssets.cats == 1 && this.$store.state.loadAssets.post == 1 && this.$store.state.loadAssets.cover == 1 && this.$store.state.loadAssets.videos == 1 && this.$store.state.loadAssets.images == 1">
                 <cover></cover>
 
                 <post></post>
@@ -70,10 +70,22 @@
                     e.preventDefault();
                 }
 
+                if(this.$store.state.post.category_id == 0 || this.$store.state.post.category_id < 1){
+                    this.$swal.fire(
+                        {
+                            icon: 'warning',
+                            title: 'Selecione uma categoria',
+                            confirmButtonColor: "#84b77c",
+                        }
+                    )
+
+                    return true;
+                }
+
                 let self = this;
                 this.$swal
                 .fire({
-                    title: "Salvar Produto?",
+                    title: "Salvar Post?",
                     showCancelButton: true,
                     confirmButtonColor: "#84b77c",
                     confirmButtonText: "Sim",
@@ -150,7 +162,7 @@
                         .fire({
                             icon: "success",
                             title: "",
-                            text: "Produto Salvo!",
+                            text: "Post Salvo!",
                             timer: 2000,
                             focusConfirm: false,
                             timerProgressBar: true,
@@ -158,10 +170,10 @@
                             showConfirmButton: false // There won't be any confirm button
                         })
                         .then(function() {
-                            // window.location =
-                            // "/editor/post/manager/" + result.value.product_id;
+                            window.location =
+                            "/editor/post/manager/" + result.value.product_id;
 
-                            console.log('thatIsOk');
+                            // console.log('thatIsOk');
                         });
                     }
                     }

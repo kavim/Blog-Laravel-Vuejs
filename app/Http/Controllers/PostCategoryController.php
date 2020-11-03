@@ -134,4 +134,91 @@ class PostCategoryController extends Controller
     {
         //
     }
+
+
+    // - - - - - - - - - - - - - - - - - - - - Metodos para Admin - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    public function cat_index()
+    {
+        $postcategories = PostCategory::get();
+
+        return view('Admin.category.index', compact('postcategories'));
+    }
+
+
+    public function cat_edit($id)
+    {
+        $postcategory = PostCategory::find($id);
+
+        return view('Admin.category.edit', compact('postcategory'));
+    }
+
+    public function cat_create()
+    {
+        $postcategory = '';
+
+        return view('Admin.category.create', compact('postcategory'));
+    }
+
+    public function cat_store(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'string|max:150',
+            'block' => 'nullable'
+        ]);
+
+        $pc = PostCategory::create([
+            'name' => $request->get('name'),
+            'block' => $request->get('block') ? 1 : 0,
+        ]);
+
+        if($pc){
+            return redirect()->route('admin.categories')->with('msg', 'Atualizado!');
+        }
+
+        return redirect()->route('admin.categories')->with('erro-msg', 'erro!');
+    }
+
+    public function cat_update(Request $request, $id)
+    {
+
+        $PostCategory = PostCategory::find($request->id);
+
+        $this->validate($request, [
+            'name' => 'string|max:150',
+            'block' => 'nullable'
+        ]);
+
+        $pc = $PostCategory->update([
+            'name' => $request->get('name'),
+            'block' => $request->get('block') ? 1 : 0,
+        ]);
+
+        if($pc){
+            return redirect()->route('admin.categories')->with('msg', 'Atualizado!');
+        }
+
+        return redirect()->route('admin.categories.edit')->with('erro-msg', 'erro!');
+    }
+
+    public function cat_delete($id)
+    {
+
+        $cat = PostCategory::find($id);
+
+        \Log::info("eu quero deletar");
+
+        $cat->update([
+            'deleted' => 1
+        ]);
+
+        $posts = Post::where('category_id', $cat->id)->get();
+
+        foreach($posts as $post){
+            $post->update([
+                'deleted' => 1
+            ]);
+        }
+
+    }
 }

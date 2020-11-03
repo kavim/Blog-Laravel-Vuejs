@@ -4,7 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Intervention\Image\Facades\Image as Imagem;
+// use Intervention\Image\Facades\Image as Imagem;
+// use Intervention\Image\ImageManagerStatic as Imagem;
+
+// use Imagem;
+
+use Intervention\Image\ImageManagerStatic as Image;
+
 use Carbon\Carbon;
 use Str;
 
@@ -18,7 +24,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::where('user_id', auth()->user()->id)->where('deleted', 0)->orderBy('id', 'DESC')->paginate(5);
+        $posts = Post::where('user_id', auth()->user()->id)->where('deleted', 0)->orderBy('id', 'DESC')->paginate(8);
 
         return view('Editor.post.index', compact('posts'));
     }
@@ -190,9 +196,6 @@ class PostController extends Controller
     {
 
         $Post = Post::where('id', $id)->where('deleted', 0)->where('user_id', auth()->user()->id)->first();
-
-        // \Log::info("getPostById");
-        // \Log::info($Post);
 
         return $Post->makeHidden(['created_at', 'updated_at', 'block', 'deleted']);
 
@@ -390,7 +393,7 @@ class PostController extends Controller
             ]);
 
             // $image = Imagem::make(storage_path("app/public/".$src))->save();
-            $image = Imagem::make(storage_path("app/public/".$src))->fit(1280, 720)->save();
+            $image = Image::make(storage_path("app/public/".$src))->fit(1280, 720)->save();
             $image->save();
         }
 
@@ -405,10 +408,6 @@ class PostController extends Controller
         $request['data'] = json_decode($request['data']);
 
         $postId = $request['data']->postId;
-
-        // \App\PostImage::where('post_id', $postId)->where('cover', 0)->delete();
-
-        // $this->validate($request, ['cover' => 'image|max:20480',]);
 
         if($request->hasFile('images')) {
 
@@ -425,7 +424,7 @@ class PostController extends Controller
                     'post_id' => $postId
                 ]);
 
-                $image = Imagem::make(storage_path("app/public/".$src))->save();
+                $image = Image::make(storage_path("app/public/".$src));
                 $image->save();
             }
         }

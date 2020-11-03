@@ -4,10 +4,7 @@
 <div class="row">
 
     <div class="col-10 mx-auto">
-        <h2>painel Admin</h2>
-        <p>
-            adminitrar users, categorias e posts.
-        </p>
+        <h1>Erro</h1>
     </div>
 
 </div>

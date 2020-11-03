@@ -2275,8 +2275,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2486,9 +2484,18 @@ __webpack_require__.r(__webpack_exports__);
         e.preventDefault();
       }
 
+      if (this.$store.state.post.category_id == 0 || this.$store.state.post.category_id < 1) {
+        this.$swal.fire({
+          icon: 'warning',
+          title: 'Selecione uma categoria',
+          confirmButtonColor: "#84b77c"
+        });
+        return true;
+      }
+
       var self = this;
       this.$swal.fire({
-        title: "Salvar Produto?",
+        title: "Salvar Post?",
         showCancelButton: true,
         confirmButtonColor: "#84b77c",
         confirmButtonText: "Sim",
@@ -2555,7 +2562,7 @@ __webpack_require__.r(__webpack_exports__);
             _this2.$swal.fire({
               icon: "success",
               title: "",
-              text: "Produto Salvo!",
+              text: "Post Salvo!",
               timer: 2000,
               focusConfirm: false,
               timerProgressBar: true,
@@ -2564,9 +2571,7 @@ __webpack_require__.r(__webpack_exports__);
               showConfirmButton: false // There won't be any confirm button
 
             }).then(function () {
-              // window.location =
-              // "/editor/post/manager/" + result.value.product_id;
-              console.log('thatIsOk');
+              window.location = "/editor/post/manager/" + result.value.product_id; // console.log('thatIsOk');
             });
           }
         }
@@ -42984,7 +42989,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-12 text-center" }, [
+    _c("div", { staticClass: "col-12 text-center px-5" }, [
       _c("img", {
         staticClass: "img-fluid rounded col-6 col-sm-12",
         attrs: { id: "blah", src: this.image.src }
@@ -43224,62 +43229,65 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row my-4" }, [
-    _c(
-      "div",
-      {
-        staticClass: "d-flex justify-content-between",
-        staticStyle: { width: "110px" }
-      },
-      [
-        _c("span", { staticClass: "pt-1" }, [_vm._v("publicar:")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "toggle lg" }, [
-          _c("label", [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.post.active,
-                  expression: "post.active"
-                }
-              ],
-              attrs: { type: "checkbox", value: "1" },
-              domProps: {
-                checked: Array.isArray(_vm.post.active)
-                  ? _vm._i(_vm.post.active, "1") > -1
-                  : _vm.post.active
-              },
-              on: {
-                change: function($event) {
-                  var $$a = _vm.post.active,
-                    $$el = $event.target,
-                    $$c = $$el.checked ? true : false
-                  if (Array.isArray($$a)) {
-                    var $$v = "1",
-                      $$i = _vm._i($$a, $$v)
-                    if ($$el.checked) {
-                      $$i < 0 && _vm.$set(_vm.post, "active", $$a.concat([$$v]))
+    _c("div", { staticClass: "col-12" }, [
+      _c(
+        "div",
+        {
+          staticClass: "d-flex justify-content-between",
+          staticStyle: { width: "110px" }
+        },
+        [
+          _c("span", { staticClass: "pt-1" }, [_vm._v("Publicar:")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "toggle lg" }, [
+            _c("label", [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.post.active,
+                    expression: "post.active"
+                  }
+                ],
+                attrs: { type: "checkbox", value: "1" },
+                domProps: {
+                  checked: Array.isArray(_vm.post.active)
+                    ? _vm._i(_vm.post.active, "1") > -1
+                    : _vm.post.active
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.post.active,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = "1",
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(_vm.post, "active", $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.post,
+                            "active",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
                     } else {
-                      $$i > -1 &&
-                        _vm.$set(
-                          _vm.post,
-                          "active",
-                          $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                        )
+                      _vm.$set(_vm.post, "active", $$c)
                     }
-                  } else {
-                    _vm.$set(_vm.post, "active", $$c)
                   }
                 }
-              }
-            }),
-            _vm._v(" "),
-            _c("span", { staticClass: "button-indecator" })
+              }),
+              _vm._v(" "),
+              _c("span", { staticClass: "button-indecator" })
+            ])
           ])
-        ])
-      ]
-    ),
+        ]
+      )
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "col-12" }, [
       _c("div", { staticClass: "form-group" }, [
@@ -43453,26 +43461,30 @@ var render = function() {
         _vm._v(" "),
         _vm._l(_vm.videos, function(video, index) {
           return _c("div", { key: index }, [
-            _c("div", { staticClass: "card", staticStyle: { width: "100%" } }, [
-              _c("div", {
-                domProps: { innerHTML: _vm._s(_vm.embData(video.link)) }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-body" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-danger",
-                    on: {
-                      click: function($event) {
-                        return _vm.removeVideo(video)
+            _c(
+              "div",
+              { staticClass: "card mx-auto", staticStyle: { width: "80%" } },
+              [
+                _c("div", {
+                  domProps: { innerHTML: _vm._s(_vm.embData(video.link)) }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-body" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      on: {
+                        click: function($event) {
+                          return _vm.removeVideo(video)
+                        }
                       }
-                    }
-                  },
-                  [_vm._v("Remover")]
-                )
-              ])
-            ])
+                    },
+                    [_vm._v("Remover")]
+                  )
+                ])
+              ]
+            )
           ])
         })
       ],
@@ -43513,6 +43525,7 @@ var render = function() {
           this.$store.state.loadAssets.images == 1
             ? _c(
                 "div",
+                { staticClass: "col-12 col-md-10 mx-auto" },
                 [
                   _c("cover"),
                   _vm._v(" "),

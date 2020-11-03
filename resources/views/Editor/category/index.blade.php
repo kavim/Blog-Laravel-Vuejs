@@ -41,7 +41,12 @@
                             @foreach ($postcategories as $pc)
                                 <tr>
                                     <td>{{ $pc->name }}</td>
-                                    <td><a href="/editor/category/edit/{{ $pc->id }}" >Editar</a></td>
+                                    <td>
+                                        @if($pc->user_id == auth()->user()->id)
+                                            <a href="/editor/category/edit/{{ $pc->id }}" >Editar</a>
+                                            <a href="/editor/category/edit/{{ $pc->id }}" >Deletar</a>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -1,7 +1,7 @@
 
 <template>
     <div class="row">
-      <div class="col-12 text-center">
+      <div class="col-12 text-center px-5">
           <img id="blah" :src="this.image.src" class="img-fluid rounded col-6 col-sm-12" />
           <label for="file-upload" class="btn btn-success mt-2">
             <i class="fa fa-cloud-upload"></i> Alterar

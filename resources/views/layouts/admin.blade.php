@@ -26,8 +26,9 @@
     <div class="bg-dark text-white border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Admin Mapp </div>
       <div class="list-group list-group-flush">
-        <a href="#" class="list-group-item list-group-item-action bg-dark text-white">Dashboard</a>
-        <a href="#" class="list-group-item list-group-item-action bg-dark text-white">usuarios</a>
+        <a href="{{ route('admin') }}" class="list-group-item list-group-item-action bg-dark text-white">Dashboard</a>
+        <a href="{{ route('admin.users') }}" class="list-group-item list-group-item-action bg-dark text-white">Usuários</a>
+        <a href="{{ route('admin.categories') }}" class="list-group-item list-group-item-action bg-dark text-white">Categorias</a>
       </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -69,7 +70,8 @@
       </nav>
 
       <div class="container-fluid">
-        <h1 class="mt-4">Admin</h1>
+
+        @yield('content')
 
       </div>
     </div>

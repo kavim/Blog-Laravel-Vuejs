@@ -1,15 +1,15 @@
 <template>
     <div class="row my-4">
 
-        <!-- {{ this.post }} -->
-
-        <div style="width: 110px" class="d-flex justify-content-between">
-            <span class="pt-1">publicar:</span>
-            <div class="toggle lg">
-                <label>
-                    <input type="checkbox" v-model="post.active" value="1">
-                    <span class="button-indecator"></span>
-                </label>
+        <div class="col-12">
+            <div style="width: 110px" class="d-flex justify-content-between">
+                <span class="pt-1">Publicar:</span>
+                <div class="toggle lg">
+                    <label>
+                        <input type="checkbox" v-model="post.active" value="1">
+                        <span class="button-indecator"></span>
+                    </label>
+                </div>
             </div>
         </div>
 
@@ -30,8 +30,6 @@
         </div>
 
         <div class="col-12">
-            <!-- {{ cats }} -->
-
             <hr>
 
             <label for="category_id" class="m-2"> Categoria: </label>
@@ -77,7 +75,7 @@
             </div>
             <div v-for="(video, index) in videos" :key="index">
                 <!-- {{ video }} -->
-                <div class="card" style="width: 100%">
+                <div class="card mx-auto" style="width: 80%">
 
                     <div v-html="embData(video.link)"></div>
 
