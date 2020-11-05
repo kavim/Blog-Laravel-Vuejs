@@ -50,12 +50,12 @@ class AdminController extends Controller
         \Log::info($request);
 
         $validator = Validator::make($request->all(), [
-            // 'name' => 'required|unique:posts|max:255',
             'name' => 'required|max:200',
             'email' => 'required|email',
             'lastname' => 'required',
             'phone' => 'max:50',
             'user_type_id' => 'required|numeric',
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         if ($validator->fails()) {
@@ -64,29 +64,17 @@ class AdminController extends Controller
                         ->withInput();
         }
 
-        $user->update([
+        \App\User::create([
             'name' => $request->name,
             'lastname' => $request->lastname,
             'email' => $request->email,
             'phone' => $request->phone,
             'block' => $request->block ? 1 : 0,
             'user_type_id' => $request->user_type_id,
+            'password' => $request->password,
         ]);
 
-        if($request->password != null){
-            if (Hash::make($request->adminpassword) === auth()->user()->password && auth()->user()->user_type_id == 3) {
-
-                \Log::info("ok para trocar senha");
-
-                $user->update(['password' => Hash::make($request->password)]);
-
-            }else{
-                return redirect()->route('admin.user.edit')->with('erro-msg', 'Erro ao atualizar senha');
-            }
-
-        }
-
-        return redirect()->route('admin.user.edit', $id)->with('msg', 'Atualizado');
+        return redirect()->route('admin.user.create')->with('msg', 'Atualizado');
     }
 
     public function user_update(Request $request, $id)

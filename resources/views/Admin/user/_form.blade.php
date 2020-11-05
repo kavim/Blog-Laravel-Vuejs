@@ -78,7 +78,7 @@
 <input type="password" id="senha" name="password" class="form-control" value="" title="Senha" size="100" minlength="1" maxlength="100" autocomplete="none">
 
 <label for="senha" class="m-2">Confirmar senha: </label>
-<input type="password" id="confsenha" name="confsenhapassword" class="form-control" value="" title="Senha" size="100" minlength="1" maxlength="100" autocomplete="none">
+<input type="password" id="confsenha" name="password_confirmation" class="form-control" value="" title="Senha" size="100" minlength="1" maxlength="100" autocomplete="none">
 
 @endif
 

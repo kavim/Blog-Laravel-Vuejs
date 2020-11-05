@@ -33,7 +33,7 @@
                         <td>
                             <a class="btn btn-link" href="{{ route('admin.categories.edit', $cat->id) }}">Editar</a>
                             <br>
-                            {{-- <a class="btn btn-link" href="{{ route('admin.categories.delete', $cat->id) }}">Deletar</a> --}}
+                            <a onclick="confirm('tens oq é nescessario?');" class="btn btn-link" href="{{ route('admin.categories.delete', $cat->id) }}">Deletar</a>
                         </td>
                     </tr>
                 @endforeach

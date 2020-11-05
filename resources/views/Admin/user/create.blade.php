@@ -9,9 +9,8 @@
 
 <div class="row">
     <div class="col-10 mx-auto rounded bg-white p-4">
-        <form action="{{ route('admin.user.create') }}" method="post" enctype="multipart/form-data" class="col-12">
+        <form action="{{ route('admin.user.store') }}" method="post" class="col-12">
             @csrf
-            @method('PUT')
 
             @include('Admin.user._form')
 

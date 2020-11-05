@@ -208,17 +208,19 @@ class PostCategoryController extends Controller
 
         \Log::info("eu quero deletar");
 
-        $cat->update([
-            'deleted' => 1
-        ]);
+        // $cat->update([
+        //     'deleted' => 1
+        // ]);
 
-        $posts = Post::where('category_id', $cat->id)->get();
+        // $posts = Post::where('category_id', $cat->id)->get();
 
-        foreach($posts as $post){
-            $post->update([
-                'deleted' => 1
-            ]);
-        }
+        // foreach($posts as $post){
+        //     $post->update([
+        //         'deleted' => 1
+        //     ]);
+        // }
+
+        echo "oi";
 
     }
 }
